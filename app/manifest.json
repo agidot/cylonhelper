@@ -11,6 +11,7 @@
   "background": {
     "scripts": [
       "scripts/chromereload.js",
+      "bower_components/jquery/dist/jquery.js",
       "scripts/background.js"
     ]
   },
@@ -19,8 +20,7 @@
       "19": "images/icon-19.png",
       "38": "images/icon-38.png"
     },
-    "default_title": "cylonhelper",
-    "default_popup": "popup.html"
+    "default_title": "cylonhelper"
   },
   "options_page": "options.html",
   "content_scripts": [
@@ -33,6 +33,7 @@
         "styles/main.css"
       ],
       "js": [
+        "bower_components/jquery/dist/jquery.js",
         "scripts/contentscript.js"
       ],
       "run_at": "document_end",
@@ -40,6 +41,7 @@
     }
   ],
   "permissions": [
+    "background",
     "tabs",
     "http://*/*",
     "https://*/*"
