@@ -1,27 +1,27 @@
 'use strict';
-var Xpaths = [];
+var elements = [];
 var bg = chrome.extension.getBackgroundPage();
 function renderXpaths(){
 	$('.XpathList').empty();
-	for(var i = 0; i < Xpaths.length; i++){
+	for(var i = 0; i < elements.length; i++){
 		console.log(i);
-		$('.XpathList').append('<li><div>' + Xpaths[i] + '</li>');
+		$('.XpathList').append('<li><div>' + elements[i].Xpath + '</li>');
 	}
-	//$('ul.XPathList li').click(function(e){
-	//	deleteXPath($(this).text());
-	//});
+}
 
-/*
-<li>
-	<div>
-		<input type="text" value="tset"><br>
-		<span></span><br>
-		<div style="">
-			<a href="#">Edit</a>
-		</div>
-	</div>
-</li>
-*/
+function processIncomingMessage(request,sendResponse){
+	if(request.msg === 'addElement'){
+		var element = request.element;
+		console.log(element);
+		elements.push(element);
+		renderXpaths();
+		sendResponse({msg: 'success'});
+	}
+	else if(request.msg === 'newPage'){
+		sendResponse({msg:'startExtension'});
+	}
+}
+function processIncomingRespond(respond,sendResponse){
 }
 
 chrome.runtime.onMessage.addListener(
@@ -29,15 +29,12 @@ chrome.runtime.onMessage.addListener(
 		console.log(sender.tab ?
 			'from a content script:' + sender.tab.url :
 			'from the extension');
-		if(request.msg === 'addXpath'){
-			Xpaths.push(request.Xpath);
-			console.log(Xpaths);
-			renderXpaths();
-		}
-		sendResponse({msg: 'success'});
-	});
+		processIncomingMessage(request,sendResponse);
+	}
+);
+
 $(function() {
 	$('#clearButton').click(function(e){
-		console.log('dog');
+		
 	});
 });

@@ -34,6 +34,7 @@
       ],
       "js": [
         "bower_components/jquery/dist/jquery.js",
+        "scripts/element.js",
         "scripts/contentscript.js"
       ],
       "run_at": "document_end",

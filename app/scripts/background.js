@@ -1,15 +1,6 @@
 'use strict';
 
-var connection = null;
 var mainWindow = null;
-
-chrome.runtime.onConnect.addListener(function(port) {
-	connection = port;
-	connection.onMessage.addListener(function(msg) {
-		if (msg.msg === 'connected'){
-		}
-	});
-});
 
 
 chrome.runtime.onInstalled.addListener(function(details){
@@ -18,7 +9,6 @@ chrome.runtime.onInstalled.addListener(function(details){
 function setBadgeText(text){
 	chrome.browserAction.setBadgeText({'text':text});
 }
-
 
 function createMainWindow(){
 
@@ -41,7 +31,7 @@ function createMainWindow(){
 			for(var i in tabs){
 				chrome.tabs.sendMessage(tabs[i].id,{'msg':'startExtension'});
 			}
-		})
+		});
 	});
 }
 
@@ -59,7 +49,6 @@ chrome.windows.onRemoved.addListener(function(closedId){
 			});
 		}
 		mainWindow = null;
-		registeredTabs = [];
 	}
 });
 
