@@ -1,0 +1,183 @@
+body {
+  max-width: 100%;
+  padding: 0;
+  margin: 10px;
+  color: #444;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  background: #eaeaea;
+  font-size: 12px;
+}
+h5 {
+  font-size: 12px;
+}
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+ol {
+  list-style-type: decimal;
+}
+.app-name {
+  margin: 2px;
+}
+#header-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  border-bottom: 1px solid #aaa;
+  background: #fff;
+  color: #fff;
+  border-bottom: 2px solid #910000;
+  box-shadow: 1px 1px 5px #aaa;
+  z-index: 10;
+}
+#header-panel #header-top-panel {
+  background: #cd0000;
+  color: #fff;
+  text-transform: uppercase;
+  padding: 10px;
+  font-size: 12px;
+  padding-left: 50px;
+  line-height: 1;
+}
+#header-panel #header-top-panel #logo {
+  position: absolute;
+  top: 5px;
+  left: 10px;
+  border: 2px solid #910000;
+  width: 45px;
+  height: 45px;
+  background: #fff;
+}
+#header-panel #header-bottom-panel {
+  background: #cd0000;
+}
+#header-panel .toolbar-panel a {
+  font-size: 13px;
+  display: inline-block;
+  padding: 5px 10px;
+  color: #fff;
+  border-left: 1px solid #f00;
+}
+#container .page-object {
+  margin-bottom: 10px;
+}
+#container .page-object .panel {
+  border-color: #aaaaaa;
+  overflow: hidden;
+}
+#container .page-object .panel .panel-heading .panel-title {
+  font-size: 12px;
+}
+#container .page-object .panel .panel-heading .panel-title a:hover {
+  text-decoration: none;
+}
+#container .page-object .panel .panel-body {
+  border-color: #aaaaaa;
+}
+#container .page-object .panel .panel-body .page-name-textbox,
+#container .page-object .panel .panel-body .page-url-textbox {
+  border-radius: 50px;
+  padding: 5px 15px;
+  border: 2px solid #cccccc;
+}
+#container .page-object .panel .panel-body .page-name-textbox:focus,
+#container .page-object .panel .panel-body .page-url-textbox:focus {
+  border-color: #fe3535;
+}
+#container .page-object .panel .panel-body .elements {
+  list-style: none;
+  margin: 0 0 10px 0;
+  padding: 0;
+}
+#container .page-object .panel .panel-body .elements li {
+  padding: 10px 25px;
+  border: 1px solid #ccc;
+  background: #f8f8f8;
+  position: relative;
+  border-left: 4px solid #ddd;
+}
+#container .page-object .panel .panel-body .elements li + li {
+  border-top: none;
+}
+#container .page-object .panel .panel-body .elements li.active {
+  border-left-color: #fe3535;
+}
+#container .page-object .panel .panel-body .elements li.active .element-no {
+  color: #333333;
+}
+#container .page-object .panel .panel-body .elements li .remove-element-button {
+  display: none;
+  position: absolute;
+  right: 8px;
+  top: 18px;
+}
+#container .page-object .panel .panel-body .elements li .show-detail-button {
+  position: absolute;
+  right: 9px;
+  top: 25px;
+  color: #aaaaaa;
+}
+#container .page-object .panel .panel-body .elements li:hover .remove-element-button {
+  display: block;
+}
+#container .page-object .panel .panel-body .elements li .element-no {
+  position: absolute;
+  left: 9px;
+  top: 17px;
+  color: #aaaaaa;
+  font-weight: bold;
+}
+#container .page-object .panel .panel-body .elements li .element-name-textbox:focus {
+  border-color: #cd0000;
+  outline: 0;
+}
+#footer-panel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 10px;
+  border-top: 1px solid #aaa;
+  background: #fff;
+}
+.remove-button {
+  color: #aaaaaa;
+}
+.remove-button:hover {
+  color: #333333;
+}
+input[type="text"] {
+  margin-bottom: 5px;
+  width: 100%;
+  border: 1px solid #ccc;
+  padding: 5px;
+  border-radius: 2px;
+}
+input[type="text"]:focus {
+  outline: none;
+}
+.btn {
+  font-size: 12px;
+  border-radius: 2px;
+}
+.item-button-panel {
+  text-align: right;
+}
+#clear-all-button {
+  float: left;
+  background: transparent;
+  color: #777;
+  border: none;
+  padding-left: 0;
+}
+#clear-all-button:hover {
+  text-decoration: underline;
+}
+#export-button {
+  background: #cd0000;
+  border-color: #cd0000;
+}

@@ -33,8 +33,7 @@ chrome.runtime.onMessage.addListener(
 	}
 );
 
-$(function() {
-	$('#clearButton').click(function(e){
-		
-	});
+$('.elements li').click(function(e){
+	$('.elements li').removeClass('active');
+	$(this).addClass('active');
 });
