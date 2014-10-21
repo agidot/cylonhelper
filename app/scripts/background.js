@@ -52,3 +52,6 @@ chrome.windows.onRemoved.addListener(function(closedId){
 	}
 });
 
+function sendMessageToTab(id,msg){
+  chrome.tabs.sendMessage(id,msg);
+}
