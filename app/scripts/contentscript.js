@@ -4,20 +4,20 @@ var elements = [];
 
 console.log('Content script');
 chrome.runtime.onMessage.addListener(
-  function(request, sender, sendResponse) {
-    console.log(sender.tab ?
-                'from a content script:' + sender.tab.url :
-                'from the extension');
-    processIncomingMessage(request);
-  }
-);
+	function(request, sender, sendResponse) {
+		console.log(sender.tab ?
+			'from a content script:' + sender.tab.url :
+			'from the extension');
+		processIncomingMessage(request);
+	}
+	);
 chrome.runtime.sendMessage({'msg':'newPage'},function(respond){
 	if(respond){
 		processIncomingRespond(respond);
 	}
 });
 function processIncomingMessage(request){
-  console.log(request);
+	console.log(request);
 	if(request.msg === 'startExtension'){
 		enableKeysBinding();
 	}
@@ -25,13 +25,13 @@ function processIncomingMessage(request){
 		removeAllStyles();
 	}
 	else if(request.msg === 'changeStyleAtXpath'){
-    changeStyleAtXpath(request.Xpath);
+		changeStyleAtXpath(request.Xpath);
 	}
 	else if(request.msg === 'recoverStyleAtXpath'){
-    recoverStyleAtXpath(request.Xpath);
+		recoverStyleAtXpath(request.Xpath);
 	}
 	else if(request.msg === 'removeStyleAtXpath'){
-    removeStyleAtXpath(request.Xpath);
+		removeStyleAtXpath(request.Xpath);
 	}
 	else if(request.msg === 'stopExtension'){
 		disableKeysBinding();
@@ -54,16 +54,16 @@ function sendElement(element){
 	elementToSend.Xpath = element.Xpath;
 	elementToSend.name = element.name;
 	chrome.runtime.sendMessage(
-    {'msg':'addElement',
-      'element':elementToSend},
-      function(respond){
-		if(respond){
-			processIncomingRespond(respond);
-		}
-		else{
-			console.log('No respond');
-		}
-	});
+		{'msg':'addElement',
+		'element':elementToSend},
+		function(respond){
+			if(respond){
+				processIncomingRespond(respond);
+			}
+			else{
+				console.log('No respond');
+			}
+		});
 }
 var mouse = {x: 0, y: 0};
 document.addEventListener('mousemove', function(e){
@@ -75,50 +75,54 @@ function keysBinding(e){
 	if(e.shiftKey){
 		currentElement = document.elementFromPoint(mouse.x,mouse.y);
 		var element = new Element(currentElement);
-    for(var i = 0; i < elements.length; i++){
-      if(elements[i].Xpath === element.Xpath){
-        return;
-      }
-    }
+		for(var i = 0; i < elements.length; i++){
+			if(elements[i].Xpath === element.Xpath){
+				return;
+			}
+		}
 		elements.push(element);
 		console.log(element);
 		sendElement(element);
 	}
 }
 function changeStyleAtXpath(Xpath){
-  for(var i in elements){
-    if(elements[i].Xpath === Xpath){
-		  $(elements[i].element).css('border',hoverBorder);
-    }
-  }
+	for(var i in elements){
+		if(elements[i].Xpath === Xpath){
+			$(elements[i].element).css('border',hoverBorder);
+		}
+	}
 }
 function recoverStyleAtXpath(Xpath){
-  for(var i in elements){
-    if(elements[i].Xpath === Xpath){
-		  $(elements[i].element).css('border',selectedBorder);
-    }
-  }
+	for(var i in elements){
+		if(elements[i].Xpath === Xpath){
+			$(elements[i].element).css('border',selectedBorder);
+		}
+	}
 }
 function removeStyleFromElement(element){
-  $(element).removeAttr('style');
+	$(element).removeAttr('style');
 }
 
 function removeAllStyles(){
 	for(var i in elements){
 		removeStyleFromElement(elements[i].element);
 	}
+	elements = [];
 }
 
 function removeStyleAtXpath(Xpath){
-  for(var i in elements){
-    if(elements[i].Xpath === Xpath){
-      removeStyleFromElement(elements[i].element);
-    }
-  }
+	for(var i = 0; i < elements.length; i++){
+		if(elements[i].Xpath === Xpath){
+			console.log(elements[i].Xpath);
+			removeStyleFromElement(elements[i].element);
+			elements.splice(i,1);
+			return;
+		}
+	}
 }
 function disableKeysBinding(){
 	$(document).unbind('keydown',keysBinding);
-  removeAllStyles();
+	removeAllStyles();
 }
 function enableKeysBinding(){
 	$(document).keydown(keysBinding);

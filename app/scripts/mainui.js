@@ -40,7 +40,7 @@ function renderXpaths(){
       html += '<a href="#" class="remove-button remove-element-button">';
       html += '<i class="fa fa-close"></i>';
       html += '</a>';
-      html += '<input type="text" class="element-name-textbox" placeholder="Element Name">';
+      html += '<input type="text" class="element-name-textbox" id = "element-page-' + count + '-name-textbox-' + j + '" placeholder="Element ' + (j+1) +'">';
       html += '</li>';
     }
     html += '</ul>';
@@ -76,13 +76,18 @@ function renderXpaths(){
   $('.remove-element-button').click(function(e){
     var url = $(this).closest('.page-object').find('.page-url-textbox').attr('placeholder');
     var index = $(this).closest('li').index();
+    console.log(url);
+    console.log(pages[url].tabId);
+
     chrome.tabs.get(pages[url].tabId,function(targetTab){
-      if(targetTab.url === url){
-        chrome.tabs.sendMessage(pages[url].tabId,{'msg':'removeStyleAtXpath','Xpath':pages[url].elements[index].Xpath});
+      if(targetTab !== null){
+        if(targetTab.url === url){
+          chrome.tabs.sendMessage(pages[url].tabId,{'msg':'removeStyleAtXpath','Xpath': pages[url].elements[index].Xpath});
+        }
       }
+      pages[url].elements.splice(index,1);
+      renderXpaths();
     });
-    pages[url].elements.splice(index,1);
-    renderXpaths();
 
   });
   $('.remove-page-button').click(function(e){
@@ -117,7 +122,38 @@ function processIncomingMessage(request,sendResponse){
 }
 function processIncomingRespond(respond,sendResponse){
 }
+function constructYAML(){
+  var count = 0;
+  var yaml = '';
+  console.log(yaml);
+  for(var i in pages){
+    var yamlObject = {};
+    yamlObject.page = {};
+    yamlObject.elements = [];
 
+    var pageObjectSelector = '#page-object-' + count;
+    var pageElement = $(pageObjectSelector);
+    var pageNameTextBox = pageElement.find('.page-name-textbox');
+    yamlObject.page.name = (pageNameTextBox.val() === '')? pageNameTextBox.attr('placeholder') : pageNameTextBox.val();
+    var pageURLTextBox = pageElement.find('.page-url-textbox');
+    yamlObject.page.url = (pageURLTextBox.val() === '')? pageURLTextBox.attr('placeholder') : pageURLTextBox.val();
+    for(var j = 0; j < pages[i].elements.length; j++){
+      var elementTextBox = $('#element-page-' + count + '-name-textbox-'+j);
+      var element = {};
+      element.name = (elementTextBox.val() === '')? elementTextBox.attr('placeholder') : elementTextBox.val();
+      element.xpath = pages[i].elements[j].Xpath;
+      yamlObject.elements.push(element);
+    }
+    var yamlDumped = jsyaml.safeDump(yamlObject);
+    yaml += '---\n' + yamlDumped;
+    count++;
+  }
+  yaml+='...';
+  var blob = new Blob([yaml], {type: 'text/plain;charset=utf-8'});
+  saveAs(blob, 'profile.yaml');
+
+  console.log(yaml);
+}
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     console.log(sender.tab ?
@@ -140,5 +176,8 @@ $(function() {
   $('.elements li').click(function(e){
     $('.elements li').removeClass('active');
     $(this).addClass('active');
+  });
+  $('#export-button').click(function(e){
+    constructYAML();
   });
 });
