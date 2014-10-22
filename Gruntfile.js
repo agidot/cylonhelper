@@ -55,10 +55,18 @@ module.exports = function (grunt) {
         },
         files: [
           '<%= config.app %>/*.html',
+          '<%= config.app %>/styles/*.css',
           '<%= config.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
           '<%= config.app %>/manifest.json',
           '<%= config.app %>/_locales/{,*/}*.json'
         ]
+      },
+      less: {
+        files: ['<%= config.app %>/styles/{,*/}*.less'],
+        tasks: ['less'],
+        options: {
+          livereload: true
+        }
       }
     },
 
@@ -275,7 +283,7 @@ module.exports = function (grunt) {
       }
     },
 
-    // Compres dist files to package
+    // Compress dist files to package
     compress: {
       dist: {
         options: {
@@ -290,6 +298,14 @@ module.exports = function (grunt) {
           src: ['**'],
           dest: ''
         }]
+      }
+    },
+
+    less: {
+      development: {
+        files: {
+          '<%= config.app %>/styles/mainui.css': '<%= config.app %>/styles/mainui.less'
+        }
       }
     }
   });

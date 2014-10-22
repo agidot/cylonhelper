@@ -30,7 +30,8 @@
                 "https://*/*"
             ],
             "css": [
-                "styles/main.css"
+                "bower_components/bootstrap/dist/css/bootstrap.min.css",
+                "styles/mainui.css"
             ],
             "js": [
                 "bower_components/jquery/dist/jquery.js",

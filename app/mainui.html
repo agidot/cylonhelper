@@ -1,10 +1,167 @@
 <html>
-  <script src="bower_components/jquery/dist/jquery.js",></script>
-  <script src="scripts/mainui.js"></script>
-  <body>
-    <div id = 'Xpath-container'>
-    </div>
-    <button id = "clearButton">clear </button>
-  </body> 
+	<head>
+		<title>Cylon Helper</title>
+		<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+		<link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+		<link rel="stylesheet" href="./styles/mainui.css">
+	</head>
+	<body>		
+		<div id="header-panel">
+			<div id="header-top-panel">
+				<div class="container">
+					<img id="logo" class="img-circle" src="./images/icon-128.png">
+					<h5 class="app-name">CYLON HELPER v0.1</h5>
+				</div>
+			</div>
+			<div id="header-bottom-panel">
+			</div>
+		</div>
+
+		<div id="container">
+			<div class="panel-group page-object" id="page-object-1">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title">
+						    <a data-toggle="collapse" data-parent="" href="#page-object-panel-1">
+								Page Object #1
+						    </a>
+						    <a href="#" class="pull-right">
+								<i class="fa fa-close remove-button remove-page-button"></i>
+						    </a>
+						 </h4>
+					</div>
+
+					<div id="page-object-panel-1" class="panel-collapse collapse in">
+					  	<div class="panel-body">
+							<div>
+								<input type="text" class="page-name-textbox" placeholder="Page Name">
+								<input type="text" class="page-url-textbox" placeholder="Page URL">
+							</div>
+
+							<h5>Elements</h5>
+						    <ul class="elements">
+								<li>
+									<span class="element-no">1</span>
+									<a href="#" class="remove-button remove-element-button">
+										<i class="fa fa-close"></i>
+									</a>
+									<input type="text" class="element-name-textbox" placeholder="Element Name">
+								</li>
+								<li>
+									<span class="element-no">2</span>
+									<a href="#" class="remove-button remove-element-button">
+										<i class="fa fa-close"></i>
+									</a>
+									<input type="text" class="element-name-textbox" placeholder="Element Name">
+								</li>
+						    </ul>
+						 </div>
+					</div>
+				</div>
+			</div>
+			<div class="panel-group page-object" id="page-object-2">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title">
+						    <a data-toggle="collapse" data-parent="" href="#page-object-panel-2">
+								Page Object #2
+						    </a>
+						    <a href="#" class="pull-right">
+								<i class="fa fa-close remove-button remove-page-button"></i>
+						    </a>
+						 </h4>
+					</div>
+					<div id="page-object-panel-2" class="panel-collapse collapse in">
+					  	<div class="panel-body">
+							<div>
+								<input type="text" class="page-name-textbox" placeholder="Page Name">
+								<input type="text" class="page-url-textbox" placeholder="Page URL">
+							</div>
+
+							<h5>Elements</h5>
+						    <ul class="elements">
+								<li>
+									<span class="element-no">1</span>
+									<a href="#" class="remove-button remove-element-button">
+										<i class="fa fa-close"></i>
+									</a>
+									<!--a href="#" class="show-detail-button">
+										<i class="fa fa-caret-down"></i>
+									</a-->
+									<input type="text" class="element-name-textbox" placeholder="Element Name">
+								</li>
+								<li>
+									<span class="element-no">2</span>
+									<a href="#" class="remove-button remove-element-button">
+										<i class="fa fa-close"></i>
+									</a>
+									<input type="text" class="element-name-textbox" placeholder="Element Name">
+								</li>
+								<li>
+									<span class="element-no">3</span>
+									<a href="#" class="remove-button remove-element-button">
+										<i class="fa fa-close"></i>
+									</a>
+									<input type="text" class="element-name-textbox" placeholder="Element Name">
+								</li>
+								<li>
+									<span class="element-no">4</span>
+									<a href="#" class="remove-button remove-element-button">
+										<i class="fa fa-close"></i>
+									</a>
+									<input type="text" class="element-name-textbox" placeholder="Element Name">
+								</li>
+								<li>
+									<span class="element-no">5</span>
+									<a href="#" class="remove-button remove-element-button">
+										<i class="fa fa-close"></i>
+									</a>
+									<input type="text" class="element-name-textbox" placeholder="Element Name">
+								</li>
+								<li>
+									<span class="element-no">6</span>
+									<a href="#" class="remove-button remove-element-button">
+										<i class="fa fa-close"></i>
+									</a>
+									<input type="text" class="element-name-textbox" placeholder="Element Name">
+								</li>
+								<li>
+									<span class="element-no">7</span>
+									<a href="#" class="remove-button remove-element-button">
+										<i class="fa fa-close"></i>
+									</a>
+									<input type="text" class="element-name-textbox" placeholder="Element Name">
+								</li>
+								<li>
+									<span class="element-no">8</span>
+									<a href="#" class="remove-button remove-element-button">
+										<i class="fa fa-close"></i>
+									</a>
+									<input type="text" class="element-name-textbox" placeholder="Element Name">
+								</li>
+						    </ul>
+						 </div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="footer-panel">
+			<div class="item-button-panel">
+				<a href="#" id="clear-all-button" class="btn btn-primary">
+					<i class="fa fa-minus-circle"></i>&nbsp;
+					Clear All
+				</a>
+				<a href="#" id="export-button" class="btn btn-primary">
+					<i class="fa fa-save"></i>&nbsp;
+					Export
+				</a>
+			</div>
+		</div>
+		
+		<script src="bower_components/jquery/dist/jquery.js"></script>
+		<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+		<script src="scripts/mainui.js"></script>
+	</body> 
 </html>
 
