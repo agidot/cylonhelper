@@ -76,7 +76,7 @@ function keysBinding(e){
 		currentElement = document.elementFromPoint(mouse.x,mouse.y);
 		var element = new Element(currentElement);
     for(var i = 0; i < elements.length; i++){
-      if(elements[i].Xpath == element.Xpath){
+      if(elements[i].Xpath === element.Xpath){
         return;
       }
     }
@@ -115,7 +115,6 @@ function removeStyleAtXpath(Xpath){
       removeStyleFromElement(elements[i].element);
     }
   }
-
 }
 function disableKeysBinding(){
 	$(document).unbind('keydown',keysBinding);
