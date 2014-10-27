@@ -281,7 +281,7 @@ function readYAML(input) {
         }
       }
       console.log(yamlObject);
-      reader.readAsText(input.files[0]);
     };
+    reader.readAsText(input.files[0]);
   }
 }
