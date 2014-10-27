@@ -164,6 +164,27 @@ input[type="text"]:focus {
   font-size: 12px;
   border-radius: 2px;
 }
+.btn.red-color {
+  background: #cd0000;
+  border-color: #cd0000;
+  color: #fff;
+}
+.btn.file {
+  position: relative;
+  overflow: hidden;
+}
+.btn.file input[type="file"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  cursor: pointer;
+  font-size: 100px;
+  min-height: 100%;
+}
+#hidden-div {
+  display: none;
+}
 .item-button-panel {
   text-align: right;
 }
@@ -176,8 +197,4 @@ input[type="text"]:focus {
 }
 #clear-all-button:hover {
   text-decoration: underline;
-}
-#export-button {
-  background: #cd0000;
-  border-color: #cd0000;
 }

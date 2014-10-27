@@ -11,103 +11,7 @@ var pageLength = 0;
 
 var bg = chrome.extension.getBackgroundPage();
 var tab = null;
-function renderXpaths(){
-  var count = 0;
-  var html = '';
-  for(var i in pages){
-    html += '<div class = "panel-group page-object">';
-    html += '<div class = "panel panel-default">';
-    html += '<div class = "panel-heading">';
-    html += '<h4 class = "panel-title">';
-    html += '<a data-toggle = "collapse" data-parent = "" href = "#page-object-panel-' + count +'">';
-    html +=  'Page #' + (count+1);
-    html += '</a>';
-    html += '<a href="#" class="pull-right">';
-    html += '<i class="fa fa-close remove-button remove-page-button"></i>';
-    html += '</a>';
-    html += '</h4>';
-    html +=	'</div>';
-    html +=	'<div class="panel-collapse collapse in">';
-    html +=	'<div class="panel-body">';
-    html +=	'<div>';
-    html += '<input type="text" class="page-name-textbox" placeholder="' + pages[i].name +'">';
-    html += '<input type="text" class="page-url-textbox" placeholder="'+ pages[i].urlName +'">';
-    html += '</div>';
-    html += '<h5>Elements</h5>';
-    html += '<ul class="elements">';
-    for(var j = 0; j < pages[i].elements.length; j++){
-      html += '<li>';
-      html += '<span class="element-no">' + (j+1) +'</span>';
-      html += '<a href="#" class="remove-button remove-element-button">';
-      html += '<i class="fa fa-close"></i>';
-      html += '</a>';
-      html += '<input type="text" class="element-name-textbox" placeholder="Element ' + (j+1) +'">';
-      html += '</li>';
-    }
-    html += '</ul>';
 
-    html += '</div>';
-    html += '</div>';
-    html +='</div>';
-    html +='</div>';
-
-    count++;
-  }
-  $('#container').html(html);
-  $('.elements > li').mouseenter(function(e){
-    var url = $(this).closest('.page-object').find('.page-url-textbox').attr('placeholder');
-    var element = $(this);
-    chrome.tabs.get(pages[url].tabId,function(targetTab){
-      if(targetTab.url === url){
-        console.log(pages[url]);
-        console.log(targetTab.id);
-        chrome.tabs.sendMessage(pages[url].tabId,{'msg':'changeStyleAtXpath','Xpath': pages[url].elements[element.index()].Xpath});
-      }
-    });
-  }).mouseleave(function(e){
-    var url = $(this).closest('.page-object').find('.page-url-textbox').attr('placeholder');
-    var element = $(this);
-    chrome.tabs.get(pages[url].tabId,function(targetTab){
-      if(targetTab.url === url){
-        chrome.tabs.sendMessage(pages[url].tabId,{'msg':'recoverStyleAtXpath','Xpath': pages[url].elements[element.index()].Xpath});
-      }
-    });
-  });
-
-  $('.remove-element-button').click(function(e){
-    var element = this;
-    var url = $(this).closest('.page-object').find('.page-url-textbox').attr('placeholder');
-    var index = $(this).closest('li').index();
-    console.log(url);
-    console.log(pages[url].tabId);
-
-    chrome.tabs.get(pages[url].tabId,function(targetTab){
-      if(targetTab !== null){
-        if(targetTab.url === url){
-          chrome.tabs.sendMessage(pages[url].tabId,{'msg':'removeStyleAtXpath','Xpath': pages[url].elements[index].Xpath});
-        }
-      }
-      pages[url].elements.splice(index,1);
-      $(this).remove();
-      //renderXpaths();
-    });
-
-  });
-  $('.remove-page-button').click(function(e){
-    var page = this;
-    var url = $(this).closest('.page-object').find('.page-url-textbox').attr('placeholder');
-    chrome.tabs.get(pages[url].tabId,function(targetTab){
-      if(targetTab !== null){
-        if(targetTab.url === url){
-          chrome.tabs.sendMessage(pages[url].tabId,{'msg':'removeAllStyles'});
-        }
-      }
-      delete pages[url];
-      $(page).remove();
-      //renderXpaths();
-    });
-  });
-}
 function addElement(element){
   pages[tab.url].elements.push(element);
   var elements = pages[tab.url].elements;
@@ -290,3 +194,23 @@ $(function() {
     constructYAML();
   });
 });
+
+$('#import-file-input').change(function(){
+    if($(this).val() == '')
+      return;
+
+    readURL(this);
+});
+
+function readURL(input) {
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+        
+    reader.onload = function (e) {
+      $('#hidden-div').html(e.target.result);
+      console.log(e.target.result);
+    }
+    
+    reader.readAsText(input.files[0]);
+  }
+}

@@ -219,7 +219,31 @@ input[type="text"]{
 .btn{
     font-size: 12px;
     border-radius: 2px;
+    
+    &.red-color{
+        background: @red-color-1;
+        border-color: @red-color-1;
+        color: #fff;
+    }
 
+    &.file{
+        position: relative;
+        overflow: hidden;
+
+        input[type="file"]{
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: pointer;
+            font-size: 100px;
+            min-height: 100%;
+        }
+    }
+}
+
+#hidden-div{
+    display: none;
 }
 
 .item-button-panel{
@@ -236,9 +260,4 @@ input[type="text"]{
     &:hover{
         text-decoration: underline;
     }
-}
-
-#export-button{
-    background: @red-color-1;
-    border-color: @red-color-1;
 }
