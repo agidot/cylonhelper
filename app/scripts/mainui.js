@@ -170,11 +170,11 @@ function addPage(){
   page.tabId = tab.id;
   pageLength++;
 
-  html += '<div class = "panel-group page-object " id = "page-object-panel-' + pageLength +'">';
+  html += '<div class = "panel-group page-object" id = "page-object-panel-' + pageLength +'">';
   html += '<div class = "panel panel-default">';
   html += '<div class = "panel-heading">';
   html += '<h4 class = "panel-title">';
-  html += '<a data-toggle = "collapse" data-parent = "" href = "#page-object-panel-' + pageLength +'">';
+  html += '<a data-toggle = "collapse" data-parent = "" href = "#page-content-panel-' + pageLength +'">';
   html +=  'Page #' + pageLength;
   html += '</a>';
   html += '<a href="#" class="pull-right">';
@@ -182,7 +182,7 @@ function addPage(){
   html += '</a>';
   html += '</h4>';
   html += '</div>';
-  html += '<div class="panel-collapse collapse in">';
+  html += '<div id="page-content-panel-' + pageLength +'" class="panel-collapse collapse in">';
   html += '<div class="panel-body">';
   html += '<div>';
   html += '<input type="text" class="page-name-textbox" placeholder="' + page.name +'">';
