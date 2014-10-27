@@ -35,7 +35,7 @@ function addElement(pageURL,element){
 
   $(targetElement).focus(function(){
     var xpath = element.Xpath;
-    $('.xpath-text').text(xpath);
+    $(domElements).siblings('.xpath-text').text(xpath);
   });
 
   domElements.find('li').mouseenter(function(e){
