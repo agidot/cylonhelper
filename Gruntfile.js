@@ -302,7 +302,7 @@ module.exports = function (grunt) {
     },
 
     less: {
-      development: {
+      app: {
         files: {
           '<%= config.app %>/styles/mainui.css': '<%= config.app %>/styles/mainui.less'
         }

@@ -1,4 +1,7 @@
 'use strict';
+
+
+
 function Element(element) {
 	this.element = element;
 	this.Xpath = this.getElementXPath(element);
@@ -27,6 +30,7 @@ Element.prototype.getElementTreeXPath = function(element){
 	}
 	return paths.length ? '/' + paths.join('/') : null;
 };
+
 Element.prototype.getElementXPath = function(element){
 	if(element && element.id){
 		return '//*[@id="' + element.id + '"]';
