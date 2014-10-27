@@ -37,4 +37,4 @@ Element.prototype.getElementXPath = function(element){
 };
 
 // export the class
-module.exports = Element;
+//module.exports = Element;
