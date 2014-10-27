@@ -8,7 +8,7 @@ function Element(element) {
 	this.name =  this.getElementDefaultName(element);
 }
 Element.prototype.getElementDefaultName = function(element){
-	return $(element).html();
+	return $(element).text().trim();
 };
 Element.prototype.getElementTreeXPath = function(element){
 	var paths = [];
