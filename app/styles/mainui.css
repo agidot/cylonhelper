@@ -131,9 +131,18 @@ ol {
   color: #aaaaaa;
   font-weight: bold;
 }
+#container .page-object .panel .panel-body .elements li .element-name-textbox {
+  margin: 0;
+}
 #container .page-object .panel .panel-body .elements li .element-name-textbox:focus {
   border-color: #cd0000;
   outline: 0;
+}
+.xpath-text {
+  margin-bottom: 10px;
+  font-style: italic;
+  color: #aaaaaa;
+  word-wrap: break-word;
 }
 #footer-panel {
   position: fixed;

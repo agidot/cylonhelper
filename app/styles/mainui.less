@@ -175,15 +175,26 @@ ol{
                             font-weight: bold;
                         }
 
-                        .element-name-textbox:focus{
-                            border-color: @red-color-1;
-                            outline: 0;
+                        .element-name-textbox{
+                            margin: 0;
+
+                            &:focus{
+                                border-color: @red-color-1;
+                                outline: 0;
+                            }
                         }
                     }
                 }
             }
         }
     }
+}
+
+.xpath-text{
+    margin-bottom: 10px;
+    font-style: italic;
+    color: @grey-color-1;
+    word-wrap: break-word;
 }
 
 #footer-panel{

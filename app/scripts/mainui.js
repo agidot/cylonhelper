@@ -27,6 +27,15 @@ function addElement(element){
     return $(this).attr('placeholder') === tab.url;
   }).closest('.page-object').find('.elements');
   domElements.append(html);
+
+  var targetElement = $(domElements).find('li:last-child .element-name-textbox');
+  scrollTo(targetElement);
+
+  $(targetElement).focus(function(){
+    var xpath = element.Xpath;
+    $('.xpath-text').text(xpath);
+  });
+
   domElements.find('li').mouseenter(function(e){
     var url = $(this).closest('.page-object').find('.page-url-textbox').attr('placeholder');
     var element = $(this);
@@ -66,6 +75,15 @@ function addElement(element){
     });
   });
 }
+
+var headerHeight = 100;
+function scrollTo(element){
+  var offset = $(element).offset().top - headerHeight;
+  $('html,body').animate({scrollTop: offset},'slow', function(){
+    $(element).focus();
+  });
+}
+
 function addPage(){
   var html = '';
   pages[tab.url] = new Page(tab.url);
@@ -79,7 +97,7 @@ function addPage(){
   html += '<div class = "panel-heading">';
   html += '<h4 class = "panel-title">';
   html += '<a data-toggle = "collapse" data-parent = "" href = "#page-content-panel-' + pageLength +'">';
-  html +=  'Page #' + pageLength;
+  html += 'Page #' + pageLength;
   html += '</a>';
   html += '<a href="#" class="pull-right">';
   html += '<i class="fa fa-close remove-button remove-page-button"></i>';
@@ -93,12 +111,15 @@ function addPage(){
   html += '<input type="text" class="page-url-textbox" placeholder="'+ tab.url +'">';
   html += '</div>';
   html += '<h5>Elements</h5>';
+  html += '<div class="xpath-text">'
+  html += '</div>'
   html += '<ul class="elements">';
   html += '</ul>';
   html += '</div>';
   html += '</div>';
-  html +='</div>';
-  html +='</div>';
+  html += '</div>';
+  html += '</div>';
+
   $('#container').append(html);
   $('#page-object-panel-' + pageLength).find('.remove-page-button').click(function(e){
     var removeButton = this;
@@ -113,12 +134,10 @@ function addPage(){
       }
       delete pages[url];
       $(removeButton).closest('.page-object').remove();
-      //renderXpaths();
     });
   });
-
-
 }
+
 function processIncomingMessage(request,sendResponse){
   if(request.msg === 'addElement'){
     sendResponse({msg: 'success'});
@@ -196,10 +215,11 @@ $(function() {
 });
 
 $('#import-file-input').change(function(){
-    if($(this).val() == '')
-      return;
+  if($(this).val() === ''){
+    return;
+  }
 
-    readURL(this);
+  readURL(this);
 });
 
 function readURL(input) {
@@ -209,7 +229,7 @@ function readURL(input) {
     reader.onload = function (e) {
       $('#hidden-div').html(e.target.result);
       console.log(e.target.result);
-    }
+    };
     
     reader.readAsText(input.files[0]);
   }
