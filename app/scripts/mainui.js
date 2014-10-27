@@ -29,6 +29,15 @@ function addElement(pageURL,element){
     return $(this).attr('data-url') === pageURL;
   }).closest('.page-object').find('.elements');
   domElements.append(html);
+
+  var targetElement = $(domElements).find('li:last-child .element-name-textbox');
+  scrollTo(targetElement);
+
+  $(targetElement).focus(function(){
+    var xpath = element.Xpath;
+    $('.xpath-text').text(xpath);
+  });
+
   domElements.find('li').mouseenter(function(e){
     var url = $(this).closest('.page-object').find('.page-url-textbox').attr('data-url');
     var element = $(this);
@@ -56,13 +65,13 @@ function addElement(pageURL,element){
     var index = $(this).closest('li').index();
 
     var removeElement = function(){
-     pages[url].elements.splice(index,1);
+      pages[url].elements.splice(index,1);
       $(removeButton).closest('li').remove();
       var elementNumberLabels = $('.element-no');
       for(var i = 0; i < elements.length; i++){
         elementNumberLabels.eq(i).text(i+1);
       }
-    }
+    };
     if(pages[url].tabId !== null){
       chrome.tabs.get(pages[url].tabId,function(targetTab){
         console.log(targetTab);
@@ -75,11 +84,19 @@ function addElement(pageURL,element){
       });
     }
     else{
-     removeElement();
+      removeElement();
     }
-
   });
 }
+
+var headerHeight = 100;
+function scrollTo(element){
+  var offset = $(element).offset().top - headerHeight;
+  $('html,body').animate({scrollTop: offset},'slow', function(){
+    $(element).focus();
+  });
+}
+
 function addPage(pageURL,pageTitle){
   var html = '';
   pageCount++;
@@ -100,7 +117,7 @@ function addPage(pageURL,pageTitle){
   html += '<div class = "panel-heading">';
   html += '<h4 class = "panel-title">';
   html += '<a data-toggle = "collapse" data-parent = "" href = "#page-content-panel-' + pageCount +'">';
-  html +=  'Page #' + pageCount; 
+  html += 'Page #' + pageCount;
   html += '</a>';
   html += '<a href="#" class="pull-right">';
   html += '<i class="fa fa-close remove-button remove-page-button"></i>';
@@ -114,12 +131,15 @@ function addPage(pageURL,pageTitle){
   html += '<input type="text" class="page-url-textbox" placeholder="Page URL" data-url = "'+ pageURL +'" value ="' + pageURL +'">';
   html += '</div>';
   html += '<h5>Elements</h5>';
+  html += '<div class="xpath-text">';
+  html += '</div>';
   html += '<ul class="elements">';
   html += '</ul>';
   html += '</div>';
   html += '</div>';
-  html +='</div>';
-  html +='</div>';
+  html += '</div>';
+  html += '</div>';
+
   $('#container').append(html);
 
 
@@ -132,7 +152,7 @@ function addPage(pageURL,pageTitle){
       delete pages[url];
       pageLength--;
       $(removeButton).closest('.page-object').remove();
-    }
+    };
     if(pages[url].tabId !== null){
       chrome.tabs.get(pages[url].tabId,function(targetTab){
         if(targetTab !== null){
@@ -147,9 +167,8 @@ function addPage(pageURL,pageTitle){
       deletepage();
     }
   });
-
-
 }
+
 function processIncomingMessage(request,sendResponse){
   if(request.msg === 'addElement'){
     sendResponse({msg: 'success'});
@@ -262,7 +281,7 @@ function readYAML(input) {
         }
       }
       console.log(yamlObject);
+      reader.readAsText(input.files[0]);
     };
-    reader.readAsText(input.files[0]);
   }
 }
