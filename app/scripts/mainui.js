@@ -14,7 +14,7 @@ var fromYaml = false;
 var bg = chrome.extension.getBackgroundPage();
 var tab = null;
 
-function addElement(pageURL,element){
+function addElement(pageURL,element,isUpdateScroll){
   pages[pageURL].elements.push(element);
   var elements = pages[pageURL].elements;
   var html = '';
@@ -31,7 +31,10 @@ function addElement(pageURL,element){
   domElements.append(html);
 
   var targetElement = $(domElements).find('li:last-child .element-name-textbox');
-  scrollTo(targetElement);
+  
+  if(isUpdateScroll){
+    scrollTo(targetElement);
+  }
 
   $(targetElement).focus(function(){
     var xpath = element.Xpath;
@@ -178,7 +181,7 @@ function processIncomingMessage(request,sendResponse){
     if(pages[tab.url] === undefined){
       addPage(tab.url);
     }
-    addElement(tab.url,element);
+    addElement(tab.url,element,true);
   }
   else if(request.msg === 'newPage'){
     sendResponse({msg:'startExtension'});
@@ -277,7 +280,7 @@ function readYAML(input) {
           var element = {};
           element.name = yamlObject[i-1].elements[j].name;
           element.Xpath = yamlObject[i-1].elements[j].xpath;
-          addElement(yamlObject[i-1].page.url,element);
+          addElement(yamlObject[i-1].page.url,element, false);
         }
       }
       console.log(yamlObject);
