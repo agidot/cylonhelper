@@ -72,10 +72,9 @@ function removeCylonHover(element){
 function addXpaths(Xpaths){
 	for(var i in Xpaths){
 		var element = new Element(getElementByXpath(Xpaths[i]));
-		addCylonHighlight(element);
+		addCylonHighlight(element.element);
 		elements.push(element);
 	}
-
 }
 function getElementByXpath (path) {
 	return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
