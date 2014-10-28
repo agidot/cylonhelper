@@ -56,9 +56,7 @@ function addCylonHighlight(element){
 }
 
 function removeCylonHighlight(element){
-	if($(element).hasClass(selectedBorderClass)){
-		$(element).removeClass(selectedBorderClass);
-	}
+	$(element).removeClass(selectedBorderClass);
 }
 
 function addCylonHover(element){
@@ -68,9 +66,7 @@ function addCylonHover(element){
 }
 
 function removeCylonHover(element){
-	if($(element).hasClass(hoverBorderClass)){
-		$(element).removeClass(hoverBorderClass);
-	}
+	$(element).removeClass(hoverBorderClass);
 }
 
 function addXpaths(Xpaths){
