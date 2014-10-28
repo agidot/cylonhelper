@@ -1,9 +1,9 @@
+
 'use strict';
 
 function Page(url){
   this.elements = [];
   this.name = null;
-  this.tabId = null;
   this.urlName = url;
 }
 var pages = {};
@@ -11,8 +11,7 @@ var pageLength = 0;
 var pageCount = 0;
 
 var bg = chrome.extension.getBackgroundPage();
-var tab = null;
-
+var tobeSent = {};
 function addElement(pageURL,element,isUpdateScroll){
   pages[pageURL].elements.push(element);
   var elements = pages[pageURL].elements;
@@ -41,6 +40,7 @@ function addElement(pageURL,element,isUpdateScroll){
   });
 
   domElements.find('li').eq(elements.length-1).mouseenter(function(e){
+    console.log(element);
     if(element.tabId !== null){
       chrome.tabs.sendMessage(element.tabId,{'msg':'changeStyleAtXpath','Xpath': element.Xpath,'url':pageURL});
     }
@@ -78,6 +78,7 @@ function addPage(pageURL,pageTitle){
   pages[pageURL] = new Page(pageURL);
   var page = pages[pageURL];
   pageLength++;
+  page.name = pageTitle;
 
   html += '<div class = "panel-group page-object" >';
   html += '<div class = "panel panel-default">';
@@ -124,18 +125,22 @@ function addPage(pageURL,pageTitle){
   });
 }
 
-function processIncomingMessage(request,sendResponse){
+function processIncomingMessage(request,sender,sendResponse){
   if(request.msg === 'addElement'){
     sendResponse({msg: 'success'});
     var element = request.element;
-    element.tabId = tab.id;
-    if(pages[tab.url] === undefined){
-      addPage(tab.url);
+    element.tabId = sender.tab.id;
+    if(pages[sender.tab.url] === undefined){
+      addPage(sender.tab.url,sender.tab.title);
     }
-    addElement(tab.url,element,true);
+    addElement(sender.tab.url,element,true);
   }
   else if(request.msg === 'newPage'){
     sendResponse({msg:'startExtension'});
+    if(tobeSent[sender.tab.id]){
+      chrome.tabs.sendMessage(sender.tab.id,{'msg':'addXpaths','Xpaths':tobeSent[sender.tab.id]});
+      delete tobeSent[sender.tab.id];
+    }
   }
 }
 function processIncomingRespond(respond,sendResponse){
@@ -149,7 +154,6 @@ function constructYAML(){
     var yamlObject = {};
     yamlObject.page = {};
     yamlObject.elements = [];
-
     var pageObjectSelector = '.page-object';
     var pageElement = $(pageObjectSelector).eq(count);
     var pageNameTextBox = pageElement.find('.page-name-textbox');
@@ -179,26 +183,27 @@ chrome.runtime.onMessage.addListener(
       'from a content script:' + sender.tab.url :
       'from the extension');
     console.log(sender.tab);
-    tab = sender.tab;
-    processIncomingMessage(request,sendResponse);
+    processIncomingMessage(request,sender,sendResponse);
   }
   );
 
-function clearPages(){
-  pages = {};
-  pageLength = 0;
-  pageCount = 0;
-  $('#container').html('');
-
+function clearPages(callback,arg){
+  chrome.tabs.query({},function(tabs){
+    for(var i in tabs){
+      chrome.tabs.sendMessage(tabs[i].id,{'msg':'removeAllStyles'});
+    }
+    pages = {};
+    pageLength = 0;
+    pageCount = 0;
+    $('#container').html('');
+    if(callback){
+      callback(arg);
+    }
+  });
 }
 $(function() {
   $('#clear-all-button').click(function(e){
-    chrome.tabs.query({},function(tabs){
-      for(var i in tabs){
-        chrome.tabs.sendMessage(tabs[i].id,{'msg':'removeAllStyles'});
-      }
-      clearPages();
-    });
+    clearPages();
   });
   $('.elements li').click(function(e){
     $('.elements li').removeClass('active');
@@ -215,30 +220,49 @@ $('#import-file-input').change(function(){
   }
   readYAML(this);
 });
+function onLoadYAML(e){
+  var yamlString = e.target.result;
+  var result = yamlString.split('---');
+  var yamlObject = [];
+  for(var i = 1; i < result.length; i++){
+    result[i] = '---' + result[i];
+    yamlObject.push(jsyaml.load(result[i]));
+    addPage(yamlObject[i-1].page.url,yamlObject[i-1].page.name);
+    for(var j = 0; j < yamlObject[i-1].elements.length; j++){
+      var element = {};
+      element.name = yamlObject[i-1].elements[j].name;
+      element.Xpath = yamlObject[i-1].elements[j].xpath;
+      element.tabId = null;
+      addElement(yamlObject[i-1].page.url,element, false);
+    }
+  }
+  console.log(yamlObject);
+  var urls = [];
+  for(var url in pages){
+    urls.push(url);
+  }
+  chrome.windows.create({'url':urls},function(wind){
+    for(var i in wind.tabs){
+      var elements = pages[wind.tabs[i].url].elements;
+      var Xpaths = [];
+      for(var j in elements){
+        elements[j].tabId = wind.tabs[i].id;
+        Xpaths.push(elements[j].Xpath);
+      }
+      console.log(Xpaths);
+      tobeSent[wind.tabs[i].id] = Xpaths;
+    }
+  });
+
+}
 
 function readYAML(input) {
   if (input.files && input.files[0]) {
     var reader = new FileReader();
     reader.onload = function (e) {
-      var yamlString = e.target.result;
-      var result = yamlString.split('---');
-      var yamlObject = [];
-      tab = null;
-      clearPages();
-      for(var i = 1; i < result.length; i++){
-        result[i] = '---' + result[i];
-        yamlObject.push(jsyaml.load(result[i]));
-        addPage(yamlObject[i-1].page.url,yamlObject[i-1].page.name);
-        for(var j = 0; j < yamlObject[i-1].elements.length; j++){
-          var element = {};
-          element.name = yamlObject[i-1].elements[j].name;
-          element.Xpath = yamlObject[i-1].elements[j].xpath;
-          element.tabId = null;
-          addElement(yamlObject[i-1].page.url,element, false);
-        }
-      }
-      console.log(yamlObject);
+      clearPages(onLoadYAML,e);
     };
     reader.readAsText(input.files[0]);
+
   }
 }
