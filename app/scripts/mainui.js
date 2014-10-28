@@ -10,7 +10,6 @@ var pages = {};
 var pageLength = 0;
 var pageCount = 0;
 
-var fromYaml = false;
 var bg = chrome.extension.getBackgroundPage();
 var tab = null;
 
@@ -41,53 +40,26 @@ function addElement(pageURL,element,isUpdateScroll){
     $(domElements).siblings('.xpath-text').text(xpath);
   });
 
-  domElements.find('li').mouseenter(function(e){
-    var url = $(this).closest('.page-object').find('.page-url-textbox').attr('data-url');
-    var element = $(this);
-    if(pages[url].tabId !== null){
-      chrome.tabs.get(pages[url].tabId,function(targetTab){
-        if(targetTab.url === url){
-          chrome.tabs.sendMessage(pages[url].tabId,{'msg':'changeStyleAtXpath','Xpath': pages[url].elements[element.index()].Xpath});
-        }
-      });
+  domElements.find('li').eq(elements.length-1).mouseenter(function(e){
+    if(element.tabId !== null){
+      chrome.tabs.sendMessage(element.tabId,{'msg':'changeStyleAtXpath','Xpath': element.Xpath,'url':pageURL});
     }
   }).mouseleave(function(e){
-    var url = $(this).closest('.page-object').find('.page-url-textbox').attr('data-url');
-    var element = $(this);
-    if(pages[url].tabId !== null){
-      chrome.tabs.get(pages[url].tabId,function(targetTab){
-        if(targetTab.url === url){
-          chrome.tabs.sendMessage(pages[url].tabId,{'msg':'recoverStyleAtXpath','Xpath': pages[url].elements[element.index()].Xpath});
-        }
-      });
+    if(element.tabId !== null){
+      chrome.tabs.sendMessage(element.tabId,{'msg':'recoverStyleAtXpath','Xpath': element.Xpath,'url':pageURL});
     }
   });
   domElements.find('.remove-element-button').eq(elements.length-1).click(function(e){
     var removeButton = this;
-    var url = $(this).closest('.page-object').find('.page-url-textbox').attr('data-url');
     var index = $(this).closest('li').index();
-
-    var removeElement = function(){
-      pages[url].elements.splice(index,1);
-      $(removeButton).closest('li').remove();
-      var elementNumberLabels = $('.element-no');
-      for(var i = 0; i < elements.length; i++){
-        elementNumberLabels.eq(i).text(i+1);
-      }
-    };
-    if(pages[url].tabId !== null){
-      chrome.tabs.get(pages[url].tabId,function(targetTab){
-        console.log(targetTab);
-        if(targetTab !== null){
-          if(targetTab.url === url){
-            chrome.tabs.sendMessage(pages[url].tabId,{'msg':'removeStyleAtXpath','Xpath': pages[url].elements[index].Xpath});
-          }
-        }
-        removeElement();
-      });
+    if(element.tabId !== null){
+      chrome.tabs.sendMessage(element.tabId,{'msg':'removeStyleAtXpath','Xpath': element.Xpath,'url':pageURL});
     }
-    else{
-      removeElement();
+    pages[pageURL].elements.splice(index,1);
+    $(removeButton).closest('li').remove();
+    var elementNumberLabels = $('.element-no');
+    for(var i = 0; i < elements.length; i++){
+      elementNumberLabels.eq(i).text(i+1);
     }
   });
 }
@@ -105,14 +77,6 @@ function addPage(pageURL,pageTitle){
   pageCount++;
   pages[pageURL] = new Page(pageURL);
   var page = pages[pageURL];
-  if(fromYaml){
-    page.name = pageTitle;
-    page.tabId = null;
-  }
-  else{
-    page.name = tab.title;
-    page.tabId = tab.id;
-  }
   pageLength++;
 
   html += '<div class = "panel-group page-object" >';
@@ -147,28 +111,16 @@ function addPage(pageURL,pageTitle){
 
 
   $('.page-object').eq(pageLength-1).find('.remove-page-button').click(function(e){
-    var removeButton = this;
-    var url = $(this).closest('.page-object').find('.page-url-textbox').attr('data-url');
-    console.log(url);
-    console.log(pages);
-    var deletepage = function(){
-      delete pages[url];
-      pageLength--;
-      $(removeButton).closest('.page-object').remove();
-    };
-    if(pages[url].tabId !== null){
-      chrome.tabs.get(pages[url].tabId,function(targetTab){
-        if(targetTab !== null){
-          if(targetTab.url === url){
-            chrome.tabs.sendMessage(pages[url].tabId,{'msg':'removeAllStyles'});
-          }
-        }
-        deletepage();
-      });
+    var removeButton = $(this);
+    for(var i = 0; i < page.elements.length; i++){
+      var element = page.elements[i];
+      if(element.tabId){
+        chrome.tabs.sendMessage(element.tabId,{'msg':'removeStyleAtXpath','Xpath': element.Xpath,'url':pageURL});
+      }
     }
-    else{
-      deletepage();
-    }
+    delete pages[pageURL];
+    pageLength--;
+    removeButton.closest('.page-object').remove();
   });
 }
 
@@ -176,8 +128,7 @@ function processIncomingMessage(request,sendResponse){
   if(request.msg === 'addElement'){
     sendResponse({msg: 'success'});
     var element = request.element;
-    console.log(element);
-    fromYaml = false;
+    element.tabId = tab.id;
     if(pages[tab.url] === undefined){
       addPage(tab.url);
     }
@@ -188,6 +139,7 @@ function processIncomingMessage(request,sendResponse){
   }
 }
 function processIncomingRespond(respond,sendResponse){
+
 }
 function constructYAML(){
   var count = 0;
@@ -241,10 +193,12 @@ function clearPages(){
 }
 $(function() {
   $('#clear-all-button').click(function(e){
-    for(var i in pages){
-      chrome.tabs.sendMessage(pages[i].tabId,{'msg':'removeAllStyles'});
-    }
-    clearPages();
+    chrome.tabs.query({},function(tabs){
+      for(var i in tabs){
+        chrome.tabs.sendMessage(tabs[i].id,{'msg':'removeAllStyles'});
+      }
+      clearPages();
+    });
   });
   $('.elements li').click(function(e){
     $('.elements li').removeClass('active');
@@ -269,7 +223,6 @@ function readYAML(input) {
       var yamlString = e.target.result;
       var result = yamlString.split('---');
       var yamlObject = [];
-      fromYaml = true;
       tab = null;
       clearPages();
       for(var i = 1; i < result.length; i++){
@@ -280,6 +233,7 @@ function readYAML(input) {
           var element = {};
           element.name = yamlObject[i-1].elements[j].name;
           element.Xpath = yamlObject[i-1].elements[j].xpath;
+          element.tabId = null;
           addElement(yamlObject[i-1].page.url,element, false);
         }
       }

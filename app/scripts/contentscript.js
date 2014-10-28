@@ -17,6 +17,11 @@ chrome.runtime.sendMessage({'msg':'newPage'},function(respond){
 	}
 });
 function processIncomingMessage(request){
+	if(request.url){
+		if(document.URL !== request.url){
+			return;
+		}
+	}
 	console.log(request);
 	if(request.msg === 'startExtension'){
 		enableKeysBinding();
