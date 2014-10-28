@@ -50,29 +50,33 @@ var selectedBorderClass = 'cylon-highlight';
 var hoverBorderClass = 'cylon-hover';
 
 function addCylonHighlight(element){
-	if(!$(element).hasClass(selectedBorderClass))
+	if(!$(element).hasClass(selectedBorderClass)){
 		$(element).addClass(selectedBorderClass);
+	}
 }
 
 function removeCylonHighlight(element){
-	if($(element).hasClass(selectedBorderClass))
+	if($(element).hasClass(selectedBorderClass)){
 		$(element).removeClass(selectedBorderClass);
+	}
 }
 
 function addCylonHover(element){
-	if(!$(element).hasClass(hoverBorderClass))
+	if(!$(element).hasClass(hoverBorderClass)){
 		$(element).addClass(hoverBorderClass);
+	}
 }
 
 function removeCylonHover(element){
-	if($(element).hasClass(hoverBorderClass))
+	if($(element).hasClass(hoverBorderClass)){
 		$(element).removeClass(hoverBorderClass);
+	}
 }
 
 function addXpaths(Xpaths){
 	for(var i in Xpaths){
 		var element = new Element(getElementByXpath(Xpaths[i]));
-		$(element).css('border',selectedBorder);
+		addCylonHighlight(element);
 		elements.push(element);
 	}
 
