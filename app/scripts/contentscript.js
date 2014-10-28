@@ -42,12 +42,32 @@ function processIncomingMessage(request){
 		disableKeysBinding();
 	}
 }
-var selectedBorder = '2px dashed #f00';
-var hoverBorder = '2px dashed #01DF3A';
+var selectedBorderClass = 'cylon-highlight';
+var hoverBorderClass = 'cylon-hover';
+
+function addCylonHighlight(element){
+	if(!$(element).hasClass(selectedBorderClass))
+		$(element).addClass(selectedBorderClass);
+}
+
+function removeCylonHighlight(element){
+	if($(element).hasClass(selectedBorderClass))
+		$(element).removeClass(selectedBorderClass);
+}
+
+function addCylonHover(element){
+	if(!$(element).hasClass(hoverBorderClass))
+		$(element).addClass(hoverBorderClass);
+}
+
+function removeCylonHover(element){
+	if($(element).hasClass(hoverBorderClass))
+		$(element).removeClass(hoverBorderClass);
+}
 
 function processIncomingRespond(respond){
 	if(respond.msg === 'success'){
-		$(currentElement).css('border',selectedBorder);
+		addCylonHighlight(currentElement);
 	}
 	else if(respond.msg === 'startExtension'){
 		processIncomingMessage(respond);
@@ -93,24 +113,27 @@ function keysBinding(e){
 function changeStyleAtXpath(Xpath){
 	for(var i in elements){
 		if(elements[i].Xpath === Xpath){
-			$(elements[i].element).css('border',hoverBorder);
+			addCylonHover(elements[i].element);
 		}
 	}
 }
 function recoverStyleAtXpath(Xpath){
 	for(var i in elements){
 		if(elements[i].Xpath === Xpath){
-			$(elements[i].element).css('border',selectedBorder);
+			removeCylonHover(elements[i].element);
+			addCylonHighlight(elements[i].element);
 		}
 	}
 }
 function removeStyleFromElement(element){
-	$(element).removeAttr('style');
+	removeCylonHover(element);
+	removeCylonHighlight(element);
 }
 
 function removeAllStyles(){
 	for(var i in elements){
-		removeStyleFromElement(elements[i].element);
+		removeCylonHover(elements[i].element);
+		removeCylonHighlight(elements[i].element);
 	}
 	elements = [];
 }
@@ -132,4 +155,3 @@ function disableKeysBinding(){
 function enableKeysBinding(){
 	$(document).keydown(keysBinding);
 }
-

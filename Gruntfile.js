@@ -304,7 +304,8 @@ module.exports = function (grunt) {
     less: {
       app: {
         files: {
-          '<%= config.app %>/styles/mainui.css': '<%= config.app %>/styles/mainui.less'
+          '<%= config.app %>/styles/mainui.css': '<%= config.app %>/styles/mainui.less',
+          '<%= config.app %>/styles/contentscript.css': '<%= config.app %>/styles/contentscript.less'
         }
       }
     }
