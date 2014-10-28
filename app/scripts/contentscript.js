@@ -2,7 +2,6 @@
 var currentElement = null;
 var elements = [];
 
-console.log('Content script');
 chrome.runtime.onMessage.addListener(
 	function(request, sender, sendResponse) {
 		console.log(sender.tab ?
@@ -11,10 +10,12 @@ chrome.runtime.onMessage.addListener(
 		processIncomingMessage(request);
 	}
 	);
-chrome.runtime.sendMessage({'msg':'newPage'},function(respond){
-	if(respond){
-		processIncomingRespond(respond);
-	}
+$(function() {
+	chrome.runtime.sendMessage({'msg':'newPage'},function(respond){
+		if(respond){
+			processIncomingRespond(respond);
+		}
+	});
 });
 function processIncomingMessage(request){
 	if(request.url){
@@ -41,6 +42,9 @@ function processIncomingMessage(request){
 	else if(request.msg === 'stopExtension'){
 		disableKeysBinding();
 	}
+	else if(request.msg === 'addXpaths'){
+		addXpaths(request.Xpaths);
+	}
 }
 var selectedBorderClass = 'cylon-highlight';
 var hoverBorderClass = 'cylon-hover';
@@ -65,6 +69,17 @@ function removeCylonHover(element){
 		$(element).removeClass(hoverBorderClass);
 }
 
+function addXpaths(Xpaths){
+	for(var i in Xpaths){
+		var element = new Element(getElementByXpath(Xpaths[i]));
+		$(element).css('border',selectedBorder);
+		elements.push(element);
+	}
+
+}
+function getElementByXpath (path) {
+	return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+}
 function processIncomingRespond(respond){
 	if(respond.msg === 'success'){
 		addCylonHighlight(currentElement);
