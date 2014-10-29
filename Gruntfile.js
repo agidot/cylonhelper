@@ -152,6 +152,7 @@ module.exports = function (grunt) {
       },
       html: [
         '<%= config.app %>/popup.html',
+        '<%= config.app %>/mainui.html',
         '<%= config.app %>/options.html'
       ]
     },
@@ -248,8 +249,20 @@ module.exports = function (grunt) {
             '{,*/}*.html',
             'styles/{,*/}*.css',
             'styles/fonts/{,*/}*.*',
-            '_locales/{,*/}*.json',
+            '_locales/{,*/}*.json'
           ]
+        },{
+          expand: true,
+          dot: true,
+          cwd: '<%= config.app %>/bower_components/font-awesome',
+          src: ['fonts/{,*/}*.*'],
+          dest: '<%= config.dist %>'
+        },{
+          expand: true,
+          dot: true,
+          cwd: '<%= config.app %>/bower_components/bootstrap/dist',
+          src: ['fonts/{,*/}*.*'],
+          dest: '<%= config.dist %>'          
         }]
       }
     },
@@ -270,7 +283,7 @@ module.exports = function (grunt) {
     chromeManifest: {
       dist: {
         options: {
-          buildnumber: true,
+          buildnumber: false,
           background: {
             target: 'scripts/background.js',
             exclude: [
