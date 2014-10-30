@@ -1,9 +1,16 @@
 <html>
 	<head>
 		<title>Cylon Helper</title>
-		<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
-		<link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
-		<link rel="stylesheet" href="./styles/mainui.css">
+        <!-- build:css styles/vendor.css -->
+        <!-- bower:css -->
+        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
+        <!-- endbower -->
+        <!-- endbuild -->
+        <!-- build:css styles/mainui.css -->
+        <link href="styles/mainui.css" rel="stylesheet">
+        <!-- endbuild -->
+
 	</head>
 	<body>		
 		<div id="header-panel">
@@ -45,11 +52,18 @@
 
 		<div id="hidden-div"></div>
 		
-		<script src="bower_components/jquery/dist/jquery.js"></script>
-		<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="bower_components/js-yaml/dist/js-yaml.js"></script>
-    <script src="bower_components/FileSaver/FileSaver.js"></script>
-		<script src="scripts/mainui.js"></script>
+        <!-- build:js scripts/vendor.js -->
+        <!-- bower:js -->
+        <script src="bower_components/jquery/dist/jquery.js"></script>
+        <script src="bower_components/js-yaml/dist/js-yaml.js"></script>
+        <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="bower_components/FileSaver/FileSaver.js"></script>
+        <!-- endbower -->
+        <!-- endbuild -->
+
+        <!-- build:js scripts/mainui.js -->
+        <script src="scripts/mainui.js"></script>
+        <!-- endbuild -->
 	</body> 
 </html>
 

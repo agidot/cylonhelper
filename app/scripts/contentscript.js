@@ -71,11 +71,20 @@ function removeCylonHover(element){
 
 function addXpaths(Xpaths){
 	for(var i in Xpaths){
+		var elementByXpath = getElementByXpath(Xpaths[i]);
+		var found = true;
+		if(elementByXpath === null){
+			found = false;
+		}
+		chrome.runtime.sendMessage({'msg':'checkXpath','Xpath':Xpaths[i],'found':found},function(respond){
+			if(respond){
+				processIncomingRespond(respond);
+			}
+		});
 		var element = new Element(getElementByXpath(Xpaths[i]));
-		addCylonHighlight(element);
+		addCylonHighlight(element.element);
 		elements.push(element);
 	}
-
 }
 function getElementByXpath (path) {
 	return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
@@ -126,11 +135,18 @@ function keysBinding(e){
 	}
 }
 function changeStyleAtXpath(Xpath){
+	var found = false;
 	for(var i in elements){
 		if(elements[i].Xpath === Xpath){
 			addCylonHover(elements[i].element);
+			found = true;
 		}
 	}
+	chrome.runtime.sendMessage({'msg':'checkXpath','Xpath':Xpath,'found':found},function(respond){
+		if(respond){
+			processIncomingRespond(respond);
+		}
+	});
 }
 function recoverStyleAtXpath(Xpath){
 	for(var i in elements){

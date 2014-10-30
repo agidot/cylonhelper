@@ -23,12 +23,12 @@ function addElement(pageURL,element,isUpdateScroll){
   html += '</a>';
   html += '<input type="text" class="element-name-textbox" placeholder="Element name", value = "'+ element.name +'"">';
   html += '</li>';
-  var domElements = $('.page-url-textbox').filter(function(index){
+  var elementsDom = $('.page-url-textbox').filter(function(index){
     return $(this).attr('data-url') === pageURL;
   }).closest('.page-object').find('.elements');
-  domElements.append(html);
+  elementsDom.append(html);
 
-  var targetElement = $(domElements).find('li:last-child .element-name-textbox');
+  var targetElement = $(elementsDom).find('li:last-child .element-name-textbox');
   
   if(isUpdateScroll){
     scrollTo(targetElement);
@@ -36,11 +36,10 @@ function addElement(pageURL,element,isUpdateScroll){
 
   $(targetElement).focus(function(){
     var xpath = element.Xpath;
-    $(domElements).siblings('.xpath-text').text(xpath);
+    $(elementsDom).siblings('.xpath-text').text(xpath);
   });
 
-  domElements.find('li').eq(elements.length-1).mouseenter(function(e){
-    console.log(element);
+  elementsDom.find('li').eq(elements.length-1).mouseenter(function(e){
     if(element.tabId !== null){
       chrome.tabs.sendMessage(element.tabId,{'msg':'changeStyleAtXpath','Xpath': element.Xpath,'url':pageURL});
     }
@@ -49,7 +48,7 @@ function addElement(pageURL,element,isUpdateScroll){
       chrome.tabs.sendMessage(element.tabId,{'msg':'recoverStyleAtXpath','Xpath': element.Xpath,'url':pageURL});
     }
   });
-  domElements.find('.remove-element-button').eq(elements.length-1).click(function(e){
+  elementsDom.find('.remove-element-button').eq(elements.length-1).click(function(e){
     var removeButton = this;
     var index = $(this).closest('li').index();
     if(element.tabId !== null){
@@ -140,6 +139,22 @@ function processIncomingMessage(request,sender,sendResponse){
     if(tobeSent[sender.tab.id]){
       chrome.tabs.sendMessage(sender.tab.id,{'msg':'addXpaths','Xpaths':tobeSent[sender.tab.id]});
       delete tobeSent[sender.tab.id];
+    }
+  }
+  else if(request.msg === 'checkXpath'){
+    for(var i = 0; i < pages[sender.tab.url].elements.length; i++){
+      if(pages[sender.tab.url].elements[i].Xpath === request.Xpath){
+        var elementsDom = $('.page-url-textbox').filter(function(index){
+          return $(this).attr('data-url') === sender.tab.url;
+        }).closest('.page-object').find('.element-no');
+        if(request.found){
+          elementsDom.eq(i).css('color', 'green');
+        }
+        else{
+          elementsDom.eq(i).css('color', 'red');
+        }
+        break;
+      }
     }
   }
 }
