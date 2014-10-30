@@ -1,6 +1,7 @@
 @red-color-1: #cd0000;
 @red-color-2: #910000;
 @red-color-3: #fe3535;
+@red-color-4: #FE3530;
 
 @grey-color-1: #aaa;
 @grey-color-2: #333;
@@ -13,6 +14,8 @@
 @border-color-1: @grey-color-1;
 @active-border: #444;
 @primary-color: #202020;
+@found-color: #00b056;
+@not-found-color: @red-color-4;
 
 @font-face {
     font-family: 'Sinkin Sans Regular';
@@ -110,6 +113,7 @@ ol{
     position: absolute;
     left: 0;
     right: 0;
+    padding: 10px;
     text-align: center;
     top: 100px;
     text-shadow: 0px 1px #fff;
@@ -176,6 +180,14 @@ ol{
                             .element-no{
                                 color: @grey-color-2;
                             }
+                        }
+
+                        &.found{
+                            border-left-color: @found-color;
+                        }
+
+                        &.not-found{
+                            border-left-color: @not-found-color;
                         }
 
                         .remove-element-button{

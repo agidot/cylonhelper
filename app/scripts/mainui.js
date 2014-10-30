@@ -146,12 +146,12 @@ function processIncomingMessage(request,sender,sendResponse){
       if(pages[sender.tab.url].elements[i].Xpath === request.Xpath){
         var elementsDom = $('.page-url-textbox').filter(function(index){
           return $(this).attr('data-url') === sender.tab.url;
-        }).closest('.page-object').find('.element-no');
+        }).closest('.page-object').find('.elements li');
         if(request.found){
-          elementsDom.eq(i).css('color', 'green');
+          elementsDom.eq(i).addClass('found');
         }
         else{
-          elementsDom.eq(i).css('color', 'red');
+          elementsDom.eq(i).addClass('not-found');
         }
         break;
       }
@@ -234,6 +234,8 @@ $('#import-file-input').change(function(){
     return;
   }
   readYAML(this);
+
+  $(this).val('');
 });
 function onLoadYAML(e){
   var yamlString = e.target.result;
