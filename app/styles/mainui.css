@@ -1,9 +1,16 @@
+@font-face {
+  font-family: 'Sinkin Sans Regular';
+  src: url('../font/sinkinsans-400regular.eot');
+  src: url('../font/sinkinsans-400regular.eot?#iefix') format('embedded-opentype'), url('../font/sinkinsans-400regular.woff2') format('woff2'), url('../font/sinkinsans-400regular.woff') format('woff'), url('../font/sinkinsans-400regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
 body {
   max-width: 100%;
   padding: 0;
   margin: 10px;
   color: #444;
-  padding-top: 50px;
+  padding-top: 68px;
   padding-bottom: 50px;
   background: #eaeaea;
   font-size: 12px;
@@ -27,30 +34,32 @@ ol {
   top: 0;
   left: 0;
   right: 0;
-  border-bottom: 1px solid #aaa;
   background: #fff;
   color: #fff;
-  border-bottom: 2px solid #910000;
   box-shadow: 1px 1px 5px #aaa;
-  z-index: 10;
+  z-index: 100;
 }
 #header-panel #header-top-panel {
-  background: #cd0000;
+  background: #202020;
   color: #fff;
-  text-transform: uppercase;
-  padding: 10px;
+  padding: 20px 10px;
   font-size: 12px;
-  padding-left: 50px;
   line-height: 1;
+  font-family: 'Sinkin Sans Regular';
 }
 #header-panel #header-top-panel #logo {
   position: absolute;
   top: 5px;
   left: 10px;
-  border: 2px solid #910000;
   width: 45px;
   height: 45px;
-  background: #fff;
+  overflow: hidden;
+}
+#header-panel #header-top-panel #logo + .app-name {
+  margin-left: 40px;
+}
+#header-panel .version-number {
+  color: #aaa;
 }
 #header-panel #header-bottom-panel {
   background: #cd0000;
@@ -61,6 +70,20 @@ ol {
   padding: 5px 10px;
   color: #fff;
   border-left: 1px solid #f00;
+}
+#instruction-text {
+  position: absolute;
+  left: 0;
+  right: 0;
+  text-align: center;
+  top: 100px;
+  text-shadow: 0px 1px #fff;
+  color: #aaa;
+  font-size: 13px;
+}
+#container {
+  position: relative;
+  z-index: 10;
 }
 #container .page-object {
   margin-bottom: 10px;
@@ -86,7 +109,7 @@ ol {
 }
 #container .page-object .panel .panel-body .page-name-textbox:focus,
 #container .page-object .panel .panel-body .page-url-textbox:focus {
-  border-color: #fe3535;
+  border-color: #444444;
 }
 #container .page-object .panel .panel-body .elements {
   list-style: none;
@@ -104,7 +127,7 @@ ol {
   border-top: none;
 }
 #container .page-object .panel .panel-body .elements li.active {
-  border-left-color: #fe3535;
+  border-left-color: #444444;
 }
 #container .page-object .panel .panel-body .elements li.active .element-no {
   color: #333333;
@@ -121,6 +144,9 @@ ol {
   top: 25px;
   color: #aaaaaa;
 }
+#container .page-object .panel .panel-body .elements li:hover .element-no {
+  color: #333333;
+}
 #container .page-object .panel .panel-body .elements li:hover .remove-element-button {
   display: block;
 }
@@ -135,7 +161,6 @@ ol {
   margin: 0;
 }
 #container .page-object .panel .panel-body .elements li .element-name-textbox:focus {
-  border-color: #cd0000;
   outline: 0;
 }
 .xpath-text {
@@ -178,6 +203,11 @@ input[type="text"]:focus {
   border-color: #cd0000;
   color: #fff;
 }
+.btn.primary-color {
+  background: #202020;
+  border-color: #202020;
+  color: #fff;
+}
 .btn.file {
   position: relative;
   overflow: hidden;
@@ -205,5 +235,5 @@ input[type="text"]:focus {
   padding-left: 0;
 }
 #clear-all-button:hover {
-  text-decoration: underline;
+  color: #202020;
 }

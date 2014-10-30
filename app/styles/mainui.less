@@ -11,14 +11,26 @@
 @font-color: @grey-color-2;
 @bg-color: @grey-color-3;
 @border-color-1: @grey-color-1;
-@active-border: @red-color-3;
+@active-border: #444;
+@primary-color: #202020;
+
+@font-face {
+    font-family: 'Sinkin Sans Regular';
+    src: url('../font/sinkinsans-400regular.eot');
+    src: url('../font/sinkinsans-400regular.eot?#iefix') format('embedded-opentype'),
+         url('../font/sinkinsans-400regular.woff2') format('woff2'),
+         url('../font/sinkinsans-400regular.woff') format('woff'),
+         url('../font/sinkinsans-400regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
 
 body{
     max-width: 100%;
     padding: 0;
     margin: 10px;
     color: #444;
-    padding-top: 50px;
+    padding-top: 68px;
     padding-bottom: 50px;
     background: @bg-color;
     font-size: 12px;
@@ -47,31 +59,36 @@ ol{
     top: 0;
     left: 0;
     right: 0;
-    border-bottom: 1px solid #aaa;
     background: #fff;
 	color: #fff;
-	border-bottom: 2px solid @red-color-2;
     box-shadow: 1px 1px 5px #aaa;
-    z-index: 10;
+    z-index: 100;
 
     #header-top-panel{
-		background: @red-color-1;
+		background: @primary-color;
 		color: #fff;
-		text-transform: uppercase;
-        padding: 10px;
+        padding: 20px 10px;
         font-size: 12px;
-        padding-left: 50px;
         line-height: 1;
+        font-family: 'Sinkin Sans Regular';
 
         #logo{
             position: absolute;
             top: 5px;
             left: 10px;
-            border: 2px solid #910000;
             width: 45px;
             height: 45px;
-            background: #fff;
+            //background: #fff;
+            overflow: hidden;
+
+            + .app-name{
+                margin-left: 40px;
+            }
         }
+    }
+
+    .version-number{
+        color: #aaa;
     }
 
     #header-bottom-panel{
@@ -89,7 +106,21 @@ ol{
     }
 }
 
+#instruction-text{
+    position: absolute;
+    left: 0;
+    right: 0;
+    text-align: center;
+    top: 100px;
+    text-shadow: 0px 1px #fff;
+    color: #aaa;
+    font-size: 13px;
+}
+
 #container{
+    position: relative;
+    z-index: 10;
+
     .page-object{
         margin-bottom: 10px;
 
@@ -162,6 +193,10 @@ ol{
                         }
 
                         &:hover{
+                            .element-no{
+                                color: @grey-color-2;
+                            }
+
                             .remove-element-button{
                                 display: block;
                             }
@@ -179,7 +214,7 @@ ol{
                             margin: 0;
 
                             &:focus{
-                                border-color: @red-color-1;
+                                //border-color: @active-border;
                                 outline: 0;
                             }
                         }
@@ -237,6 +272,12 @@ input[type="text"]{
         color: #fff;
     }
 
+    &.primary-color{
+        background: @primary-color;
+        border-color: @primary-color;
+        color: #fff;   
+    }
+
     &.file{
         position: relative;
         overflow: hidden;
@@ -269,6 +310,6 @@ input[type="text"]{
     padding-left: 0;
 
     &:hover{
-        text-decoration: underline;
+        color: @primary-color;
     }
 }
