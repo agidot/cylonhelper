@@ -177,6 +177,7 @@ ol {
   padding: 10px;
   border-top: 1px solid #aaa;
   background: #fff;
+  z-index: 100;
 }
 .remove-button {
   color: #aaaaaa;
