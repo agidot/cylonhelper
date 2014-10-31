@@ -75,6 +75,7 @@ ol {
   position: absolute;
   left: 0;
   right: 0;
+  padding: 10px;
   text-align: center;
   top: 100px;
   text-shadow: 0px 1px #fff;
@@ -131,6 +132,12 @@ ol {
 }
 #container .page-object .panel .panel-body .elements li.active .element-no {
   color: #333333;
+}
+#container .page-object .panel .panel-body .elements li.found {
+  border-left-color: #00b056;
+}
+#container .page-object .panel .panel-body .elements li.not-found {
+  border-left-color: #fe3530;
 }
 #container .page-object .panel .panel-body .elements li .remove-element-button {
   display: none;
