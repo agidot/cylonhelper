@@ -13,6 +13,7 @@ var pageCount = 0;
 var bg = chrome.extension.getBackgroundPage();
 var tobeSent = {};
 function addElement(pageURL,element,isUpdateScroll){
+  pageURL = stripTrailingSlash(pageURL);
   pages[pageURL].elements.push(element);
   var elements = pages[pageURL].elements;
   var html = '';
@@ -41,13 +42,56 @@ function addElement(pageURL,element,isUpdateScroll){
 
   elementsDom.find('li').eq(elements.length-1).mouseenter(function(e){
     if(element.tabId !== null){
-      chrome.tabs.sendMessage(element.tabId,{'msg':'changeStyleAtXpath','Xpath': element.Xpath,'url':pageURL});
+      chrome.tabs.get(element.tabId, function(tab){
+        console.log('hello');
+        if(tab){
+          chrome.tabs.sendMessage(element.tabId,{'msg':'changeStyleAtXpath','Xpath': element.Xpath,'url':pageURL});
+
+        }
+        else{
+          element.tabId = null;
+        }
+      });
     }
   }).mouseleave(function(e){
     if(element.tabId !== null){
-      chrome.tabs.sendMessage(element.tabId,{'msg':'recoverStyleAtXpath','Xpath': element.Xpath,'url':pageURL});
+      chrome.tabs.get(element.tabId, function(tab){
+        if(tab){
+          chrome.tabs.sendMessage(element.tabId,{'msg':'recoverStyleAtXpath','Xpath': element.Xpath,'url':pageURL});
+        }
+        else{
+          element.tabId = null;
+        }
+      });
     }
   });
+
+  elementsDom.find('.element-no').eq(elements.length-1).click(function(e){
+    console.log('dog');
+    if(element.tabId !== null){
+      chrome.tabs.get(element.tabId, function(tab){
+        if(tab){
+          chrome.tabs.sendMessage(element.tabId,{'msg':'findXpath','Xpath': element.Xpath,'url':pageURL});
+        }
+        else{
+          element.tabId = null;
+        }
+      });
+    }
+    else{
+      chrome.tabs.query({'url':pageURL},function(tabs){
+        for(var tab in tabs){
+          if(tabs){
+            var Xpaths = [];
+            Xpaths.push(element.Xpath);
+            chrome.tabs.sendMessage(element.tabId,{'msg':'findXpath','Xpath':element.Xpath,'url':pageURL});
+          }
+        }
+      });
+    }
+
+  });
+
   elementsDom.find('.remove-element-button').eq(elements.length-1).click(function(e){
     var removeButton = this;
     var index = $(this).closest('li').index();
@@ -72,6 +116,7 @@ function scrollTo(element){
 }
 
 function addPage(pageURL,pageTitle){
+  pageURL = stripTrailingSlash(pageURL);
   var html = '';
   pageCount++;
   pages[pageURL] = new Page(pageURL);
@@ -124,28 +169,39 @@ function addPage(pageURL,pageTitle){
   });
 }
 
+function stripTrailingSlash(str) {
+  if(str.substr(-1) === '/') {
+    return str.substr(0, str.length - 1);
+  }
+  return str;
+}
+
+
+
 function processIncomingMessage(request,sender,sendResponse){
+  var senderURL = stripTrailingSlash(sender.tab.url);
   if(request.msg === 'addElement'){
     sendResponse({msg: 'success'});
     var element = request.element;
     element.tabId = sender.tab.id;
-    if(pages[sender.tab.url] === undefined){
-      addPage(sender.tab.url,sender.tab.title);
+    if(pages[senderURL] === undefined){
+      addPage(senderURL,sender.tab.title);
     }
-    addElement(sender.tab.url,element,true);
+    addElement(senderURL,element,true);
   }
   else if(request.msg === 'newPage'){
     sendResponse({msg:'startExtension'});
     if(tobeSent[sender.tab.id]){
-      chrome.tabs.sendMessage(sender.tab.id,{'msg':'addXpaths','Xpaths':tobeSent[sender.tab.id]});
+      chrome.tabs.sendMessage(sender.tab.id,{'msg':'findXpaths','Xpaths':tobeSent[sender.tab.id]});
       delete tobeSent[sender.tab.id];
     }
   }
   else if(request.msg === 'checkXpath'){
-    for(var i = 0; i < pages[sender.tab.url].elements.length; i++){
-      if(pages[sender.tab.url].elements[i].Xpath === request.Xpath){
+    console.log('checkXpath ' + request.Xpath + ' found = ' + request.found);
+    for(var i = 0; i < pages[senderURL].elements.length; i++){
+      if(pages[senderURL].elements[i].Xpath === request.Xpath){
         var elementsDom = $('.page-url-textbox').filter(function(index){
-          return $(this).attr('data-url') === sender.tab.url;
+          return $(this).attr('data-url') === senderURL;
         }).closest('.page-object').find('.element-no');
         if(request.found){
           elementsDom.eq(i).css('color', 'green');
@@ -153,7 +209,6 @@ function processIncomingMessage(request,sender,sendResponse){
         else{
           elementsDom.eq(i).css('color', 'red');
         }
-        break;
       }
     }
   }
@@ -258,7 +313,9 @@ function onLoadYAML(e){
   }
   chrome.windows.create({'url':urls},function(wind){
     for(var i in wind.tabs){
-      var elements = pages[wind.tabs[i].url].elements;
+      var url = stripTrailingSlash(wind.tabs[i].url);
+      var elements = pages[url].elements;
+
       var Xpaths = [];
       for(var j in elements){
         elements[j].tabId = wind.tabs[i].id;
@@ -278,6 +335,5 @@ function readYAML(input) {
       clearPages(onLoadYAML,e);
     };
     reader.readAsText(input.files[0]);
-
   }
 }

@@ -2,9 +2,14 @@
 
 
 
-function Element(element) {
+function Element(element,Xpath) {
 	this.element = element;
-	this.Xpath = this.getElementXPath(element);
+	if(Xpath){
+		this.Xpath = Xpath;
+	}
+	else{
+		this.Xpath = this.getElementXPath(element);
+	}
 	this.name =  this.getElementDefaultName(element);
 }
 Element.prototype.getElementDefaultName = function(element){

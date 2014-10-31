@@ -19,7 +19,8 @@ $(function() {
 });
 function processIncomingMessage(request){
 	if(request.url){
-		if(document.URL !== request.url){
+		if(stripTrailingSlash(document.URL) !== request.url){
+			console.log(request.url);
 			return;
 		}
 	}
@@ -42,12 +43,27 @@ function processIncomingMessage(request){
 	else if(request.msg === 'stopExtension'){
 		disableKeysBinding();
 	}
-	else if(request.msg === 'addXpaths'){
-		addXpaths(request.Xpaths);
+	else if(request.msg === 'findXpaths'){
+		for(var i in request.Xpaths){
+			findXpath(request.Xpaths[i]);
+		}
+	}
+	else if(request.msg === 'findXpath'){
+		findXpath(request.Xpath);
+		changeStyleAtXpath(request.Xpath);
 	}
 }
 var selectedBorderClass = 'cylon-highlight';
 var hoverBorderClass = 'cylon-hover';
+
+
+function stripTrailingSlash(str) {
+  if(str.substr(-1) === '/') {
+    return str.substr(0, str.length - 1);
+  }
+  return str;
+}
+
 
 function addCylonHighlight(element){
 	if(!$(element).hasClass(selectedBorderClass)){
@@ -69,22 +85,24 @@ function removeCylonHover(element){
 	$(element).removeClass(hoverBorderClass);
 }
 
-function addXpaths(Xpaths){
-	for(var i in Xpaths){
-		var elementByXpath = getElementByXpath(Xpaths[i]);
-		var found = true;
-		if(elementByXpath === null){
-			found = false;
-		}
-		chrome.runtime.sendMessage({'msg':'checkXpath','Xpath':Xpaths[i],'found':found},function(respond){
-			if(respond){
-				processIncomingRespond(respond);
-			}
-		});
-		var element = new Element(getElementByXpath(Xpaths[i]));
+function findXpath(Xpath){
+	var elementByXpath = getElementByXpath(Xpath);
+	var found = false;
+	if(elementByXpath){
+		var element = new Element(elementByXpath,Xpath);
 		addCylonHighlight(element.element);
 		elements.push(element);
+		found = true;
 	}
+	console.log(Xpath);
+	console.log(elementByXpath);
+	console.log(found);
+
+	chrome.runtime.sendMessage({'msg':'checkXpath','Xpath':Xpath,'found':found},function(respond){
+		if(respond){
+			processIncomingRespond(respond);
+		}
+	});
 }
 function getElementByXpath (path) {
 	return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
@@ -130,23 +148,20 @@ function keysBinding(e){
 			}
 		}
 		elements.push(element);
-		console.log(element);
 		sendElement(element);
 	}
 }
 function changeStyleAtXpath(Xpath){
-	var found = false;
 	for(var i in elements){
 		if(elements[i].Xpath === Xpath){
+			$('html, body').stop( true, true ).animate({
+				scrollTop: $(elements[i].element).offset().top
+			}, 200);
 			addCylonHover(elements[i].element);
-			found = true;
+			return true;
 		}
 	}
-	chrome.runtime.sendMessage({'msg':'checkXpath','Xpath':Xpath,'found':found},function(respond){
-		if(respond){
-			processIncomingRespond(respond);
-		}
-	});
+	return false;
 }
 function recoverStyleAtXpath(Xpath){
 	for(var i in elements){
