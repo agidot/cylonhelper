@@ -6,6 +6,7 @@ function Page(tabId,url,name){
   this.elements = [];
   this.name = name;
   this.url = url;
+  this.active = false;
 }
 var pages = [];
 var pageLength = 0;
@@ -43,22 +44,19 @@ function addElement(pageIndex,element,isUpdateScroll){
   });
 
   elementsDom.find('li').eq(elements.length-1).mouseenter(function(e){
-    var index = $(this).closest('.page-object').index();
-    chrome.tabs.sendMessage(pages[index].tabId,{'msg':'changeStyleAtXpath','Xpath': element.Xpath,'url':pageURL});
+    chrome.tabs.sendMessage(page.tabId,{'msg':'changeStyleAtXpath','Xpath': element.Xpath,'url':pageURL});
   }).mouseleave(function(e){
-    var index = $(this).closest('.page-object').index();
-    chrome.tabs.sendMessage(pages[index].tabId,{'msg':'recoverStyleAtXpath','Xpath': element.Xpath,'url':pageURL});
+    chrome.tabs.sendMessage(page.tabId,{'msg':'recoverStyleAtXpath','Xpath': element.Xpath,'url':pageURL});
   });
   elementsDom.find('.element-no').eq(elements.length-1).click(function(e){
-    var index = $(this).closest('.page-object').index();
-    chrome.tabs.sendMessage(pages[index].tabId,{'msg':'findXpath','Xpath': element.Xpath,'url':pageURL});
+    chrome.tabs.sendMessage(page.tabId,{'msg':'findXpath','Xpath': element.Xpath,'url':pageURL});
   });
 
   elementsDom.find('.remove-element-button').eq(elements.length-1).click(function(e){
     var removeButton = this;
     var elementIndex = $(this).closest('li').index();
-    chrome.tabs.sendMessage(pages[pageIndex].tabId,{'msg':'removeStyleAtXpath','Xpath': element.Xpath,'url':pageURL});
-    pages[pageIndex].elements.splice(pageIndex,1);
+    chrome.tabs.sendMessage(page.tabId,{'msg':'removeStyleAtXpath','Xpath': element.Xpath,'url':pageURL});
+    elements.splice(pageIndex,1);
     $(removeButton).closest('li').remove();
     var elementNumberLabels = $('.element-no');
     for(var i = 0; i < elements.length; i++){
@@ -74,6 +72,28 @@ function scrollTo(element){
     $(element).focus();
   });
 }
+function deactivatePage(index){
+  pages[index].active = false;
+  $('.panel-title').eq(index).css('color', 'red');
+  $('.page-object').eq(index).find('.element-no').css('color', 'red');
+}
+function activatePage(index){
+  pages[index].active = true;
+  $('.panel-title').eq(index).css('color', 'black');
+}
+chrome.tabs.onRemoved.addListener(function(tabId,removeInfo){
+  for(var i in pages){
+    if(pages[i].active){
+      if(pages[i].tabId === tabId){
+        deactivatePage(i);
+      }
+    }
+  }
+});
+
+
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+});
 
 function addPage(tabId,pageURL,pageTitle){
   pageURL = stripTrailingSlash(pageURL);
@@ -100,7 +120,7 @@ function addPage(tabId,pageURL,pageTitle){
   html += '<input type="text" class="page-name-textbox" placeholder="Page Name" value ="' + page.name +'">';
   html += '<input type="text" class="page-url-textbox" placeholder="Page URL" data-url = "'+ pageURL +'" value ="' + pageURL +'">';
   html += '</div>';
-  html += '<h5>Elements</h5>';
+  html += '<h5 class ="find-xpath">Elements</h5>';
   html += '<div class="xpath-text">';
   html += '</div>';
   html += '<ul class="elements">';
@@ -110,20 +130,36 @@ function addPage(tabId,pageURL,pageTitle){
   html += '</div>';
   html += '</div>';
 
+
   $('#container').append(html);
+  $('.find-xpath').eq(pages.length-1).click(function(e){
+    var Xpaths = [];
+    for(var j in page.elements){
+      Xpaths.push(page.elements[j].Xpath);
+    }
+    if(page.active){
+      chrome.tabs.sendMessage(page.tabId,{'msg':'findXpaths','Xpaths':Xpaths});
+      chrome.tabs.update(page.tabId,{'active':true});
+    }
+    else{
+      chrome.windows.create({'url':pageURL},function(wind){
+        activatePage(pages.length-1);
+        page.tabId = wind.tabs[0].id;
+        tobeSent[wind.tabs[0].id] = Xpaths;
+      });
+    }
+  });
 
 
   $('.page-object').eq(pages.length-1).find('.remove-page-button').click(function(e){
     var removeButton = $(this);
-    for(var i = 0; i < page.elements.length; i++){
-      var element = page.elements[i];
-      if(element.tabId){
-        chrome.tabs.sendMessage(element.tabId,{'msg':'removeStyleAtXpath','Xpath': element.Xpath,'url':pageURL});
-      }
+    if(page.active){
+      chrome.tabs.sendMessage(page.tabId,{'msg':'removeAllStyles'});
     }
     pages.splice(removeButton.closest('.page-object').index());
     removeButton.closest('.page-object').remove();
   });
+  page.active = true;
   return page;
 }
 
@@ -143,11 +179,13 @@ function processIncomingMessage(request,sender,sendResponse){
       if(pages[index].tabId === sender.tab.id && pages[index].url === senderURL){
         addElement(index,element,true);
         haveTabId = true;
+        $('.page-object').eq(index).find('.element-no').css('color', 'green');
       }
     }
     if(!haveTabId){
       var page = addPage(sender.tab.id,senderURL,sender.tab.title);
       addElement(pages.length-1,element,true);
+      $('.page-object').eq(pages.length-1).find('.element-no').css('color', 'green');
     }
   }
   else if(request.msg === 'newPage'){
@@ -155,6 +193,14 @@ function processIncomingMessage(request,sender,sendResponse){
     if(tobeSent[sender.tab.id]){
       chrome.tabs.sendMessage(sender.tab.id,{'msg':'findXpaths','Xpaths':tobeSent[sender.tab.id]});
       delete tobeSent[sender.tab.id];
+      return;
+    }
+    for(var k in pages){
+      if(pages[k].active){
+        if(pages[k].tabId === sender.tab.id && pages[k].url !== senderURL){
+          deactivatePage(k);
+        }
+      }
     }
   }
   else if(request.msg === 'checkXpath'){
@@ -215,7 +261,6 @@ chrome.runtime.onMessage.addListener(
     console.log(sender.tab ?
       'from a content script:' + sender.tab.url :
       'from the extension');
-    console.log(sender.tab);
     processIncomingMessage(request,sender,sendResponse);
   }
   );

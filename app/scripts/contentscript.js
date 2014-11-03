@@ -44,18 +44,19 @@ function processIncomingMessage(request){
 		disableKeysBinding();
 	}
 	else if(request.msg === 'findXpaths'){
+		removeAllStyles();
 		for(var i in request.Xpaths){
 			findXpath(request.Xpaths[i]);
 		}
 	}
 	else if(request.msg === 'findXpath'){
+		removeStyleAtXpath(request.Xpath);
 		findXpath(request.Xpath);
 		changeStyleAtXpath(request.Xpath);
 	}
 }
 var selectedBorderClass = 'cylon-highlight';
 var hoverBorderClass = 'cylon-hover';
-
 
 function stripTrailingSlash(str) {
   if(str.substr(-1) === '/') {
@@ -90,9 +91,16 @@ function findXpath(Xpath){
 	var found = false;
 	if(elementByXpath){
 		var element = new Element(elementByXpath,Xpath);
-		addCylonHighlight(element.element);
-		elements.push(element);
-		found = true;
+		for(var i = 0; i < elements.length; i++){
+			if(elementByXpath === elements[i].element){
+				found = true;
+			}
+		}
+		if(!found){
+			addCylonHighlight(element.element);
+			elements.push(element);
+			found = true;
+		}
 	}
 	console.log(Xpath);
 	console.log(elementByXpath);
@@ -143,7 +151,7 @@ function keysBinding(e){
 		currentElement = document.elementFromPoint(mouse.x,mouse.y);
 		var element = new Element(currentElement);
 		for(var i = 0; i < elements.length; i++){
-			if(elements[i].Xpath === element.Xpath){
+			if(elements[i].element === currentElement){
 				return;
 			}
 		}
