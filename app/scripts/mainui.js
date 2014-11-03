@@ -93,6 +93,7 @@ chrome.tabs.onRemoved.addListener(function(tabId,removeInfo){
 
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+
 });
 
 function addPage(tabId,pageURL,pageTitle){
@@ -130,9 +131,10 @@ function addPage(tabId,pageURL,pageTitle){
   html += '</div>';
   html += '</div>';
 
+  var index = pages.length-1;
 
   $('#container').append(html);
-  $('.find-xpath').eq(pages.length-1).click(function(e){
+  $('.find-xpath').eq(index).click(function(e){
     var Xpaths = [];
     for(var j in page.elements){
       Xpaths.push(page.elements[j].Xpath);
@@ -143,7 +145,7 @@ function addPage(tabId,pageURL,pageTitle){
     }
     else{
       chrome.windows.create({'url':pageURL},function(wind){
-        activatePage(pages.length-1);
+        activatePage(index);
         page.tabId = wind.tabs[0].id;
         tobeSent[wind.tabs[0].id] = Xpaths;
       });
@@ -151,12 +153,12 @@ function addPage(tabId,pageURL,pageTitle){
   });
 
 
-  $('.page-object').eq(pages.length-1).find('.remove-page-button').click(function(e){
+  $('.page-object').eq(index).find('.remove-page-button').click(function(e){
     var removeButton = $(this);
     if(page.active){
       chrome.tabs.sendMessage(page.tabId,{'msg':'removeAllStyles'});
     }
-    pages.splice(removeButton.closest('.page-object').index());
+    pages.splice(index);
     removeButton.closest('.page-object').remove();
   });
   page.active = true;
