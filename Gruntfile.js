@@ -34,20 +34,20 @@ module.exports = function (grunt) {
       },
       js: {
         files: ['<%= config.app %>/scripts/{,*/}*.js'],
-        tasks: ['jshint'],
-        options: {
-          livereload: true
-        }
+tasks: ['jshint'],
+options: {
+  livereload: true
+}
       },
       gruntfile: {
         files: ['Gruntfile.js']
       },
       styles: {
         files: ['<%= config.app %>/styles/{,*/}*.css'],
-        tasks: [],
-        options: {
-          livereload: true
-        }
+tasks: [],
+options: {
+  livereload: true
+}
       },
       livereload: {
         options: {
@@ -63,13 +63,19 @@ module.exports = function (grunt) {
       },
       less: {
         files: ['<%= config.app %>/styles/{,*/}*.less'],
-        tasks: ['less'],
-        options: {
-          livereload: true
-        }
+          tasks: ['less'],
+          options: {
+            livereload: true
+          }
+      },
+      coffee: {
+        files: ['<%= config.app %>/coffees/{,*/}*.coffee'],
+          tasks: ['coffee'],
+          options: {
+            livereload: true
+          }
       }
     },
-
     // Grunt server and debug server setting
     connect: {
       options: {
@@ -121,8 +127,8 @@ module.exports = function (grunt) {
       all: [
         'Gruntfile.js',
         '<%= config.app %>/scripts/{,*/}*.js',
-        '!<%= config.app %>/scripts/vendor/*',
-        'test/spec/{,*/}*.js'
+            '!<%= config.app %>/scripts/vendor/*',
+            'test/spec/{,*/}*.js'
       ]
     },
     mocha: {
@@ -163,7 +169,7 @@ module.exports = function (grunt) {
         assetsDirs: ['<%= config.dist %>', '<%= config.dist %>/images']
       },
       html: ['<%= config.dist %>/{,*/}*.html'],
-      css: ['<%= config.dist %>/styles/{,*/}*.css']
+          css: ['<%= config.dist %>/styles/{,*/}*.css']
     },
 
     // The following *-min tasks produce minifies files in the dist folder
@@ -218,111 +224,122 @@ module.exports = function (grunt) {
     //     files: {
     //       '<%= config.dist %>/styles/main.css': [
     //         '<%= config.app %>/styles/{,*/}*.css'
-    //       ]
-    //     }
-    //   }
-    // },
-    // uglify: {
-    //   dist: {
-    //     files: {
-    //       '<%= config.dist %>/scripts/scripts.js': [
-    //         '<%= config.dist %>/scripts/scripts.js'
-    //       ]
-    //     }
-    //   }
-    // },
-    // concat: {
-    //   dist: {}
-    // },
+          //       ]
+          //     }
+          //   }
+          // },
+          // uglify: {
+          //   dist: {
+          //     files: {
+          //       '<%= config.dist %>/scripts/scripts.js': [
+          //         '<%= config.dist %>/scripts/scripts.js'
+          //       ]
+          //     }
+          //   }
+          // },
+          // concat: {
+          //   dist: {}
+          // },
 
-    // Copies remaining files to places other tasks can use
-    copy: {
-      dist: {
-        files: [{
-          expand: true,
-          dot: true,
-          cwd: '<%= config.app %>',
-          dest: '<%= config.dist %>',
-          src: [
-            '*.{ico,png,txt}',
-            'images/{,*/}*.{webp,gif}',
-            '{,*/}*.html',
-            'styles/{,*/}*.css',
-            'styles/fonts/{,*/}*.*',
-            '_locales/{,*/}*.json'
+          // Copies remaining files to places other tasks can use
+          copy: {
+          dist: {
+            files: [{
+              expand: true,
+              dot: true,
+              cwd: '<%= config.app %>',
+              dest: '<%= config.dist %>',
+              src: [
+                '*.{ico,png,txt}',
+                'images/{,*/}*.{webp,gif}',
+          '{,*/}*.html',
+          'styles/{,*/}*.css',
+          'styles/fonts/{,*/}*.*',
+          '_locales/{,*/}*.json'
+              ]
+            },{
+              expand: true,
+              dot: true,
+              cwd: '<%= config.app %>/bower_components/font-awesome',
+              src: ['fonts/{,*/}*.*'],
+          dest: '<%= config.dist %>'
+            },{
+              expand: true,
+              dot: true,
+              cwd: '<%= config.app %>/bower_components/bootstrap/dist',
+              src: ['fonts/{,*/}*.*'],
+          dest: '<%= config.dist %>'
+            }]
+          }
+        },
+
+        // Run some tasks in parallel to speed up build process
+        concurrent: {
+          chrome: [
+          ],
+          dist: [
+            'imagemin',
+            'svgmin'
+          ],
+          test: [
           ]
-        },{
-          expand: true,
-          dot: true,
-          cwd: '<%= config.app %>/bower_components/font-awesome',
-          src: ['fonts/{,*/}*.*'],
-          dest: '<%= config.dist %>'
-        },{
-          expand: true,
-          dot: true,
-          cwd: '<%= config.app %>/bower_components/bootstrap/dist',
-          src: ['fonts/{,*/}*.*'],
-          dest: '<%= config.dist %>'
-        }]
-      }
-    },
+        },
 
-    // Run some tasks in parallel to speed up build process
-    concurrent: {
-      chrome: [
-      ],
-      dist: [
-        'imagemin',
-        'svgmin'
-      ],
-      test: [
-      ]
-    },
-
-    // Auto buildnumber, exclude debug files. smart builds that event pages
-    chromeManifest: {
-      dist: {
-        options: {
-          buildnumber: false,
-          background: {
-            target: 'scripts/background.js',
-            exclude: [
-              'scripts/chromereload.js'
-            ]
+        // Auto buildnumber, exclude debug files. smart builds that event pages
+        chromeManifest: {
+          dist: {
+            options: {
+              buildnumber: false,
+              background: {
+                target: 'scripts/background.js',
+                exclude: [
+                  'scripts/chromereload.js'
+                ]
+              }
+            },
+            src: '<%= config.app %>',
+            dest: '<%= config.dist %>'
           }
         },
-        src: '<%= config.app %>',
-        dest: '<%= config.dist %>'
-      }
-    },
 
-    // Compress dist files to package
-    compress: {
-      dist: {
-        options: {
-          archive: function() {
-            var manifest = grunt.file.readJSON('app/manifest.json');
-            return 'package/cylonhelper-' + manifest.version + '.zip';
+        // Compress dist files to package
+        compress: {
+          dist: {
+            options: {
+              archive: function() {
+                var manifest = grunt.file.readJSON('app/manifest.json');
+                return 'package/cylonhelper-' + manifest.version + '.zip';
+              }
+            },
+            files: [{
+              expand: true,
+              cwd: 'dist/',
+              src: ['**'],
+              dest: ''
+            }]
           }
         },
-        files: [{
-          expand: true,
-          cwd: 'dist/',
-          src: ['**'],
-          dest: ''
-        }]
-      }
-    },
-
-    less: {
-      app: {
-        files: {
-          '<%= config.app %>/styles/mainui.css': '<%= config.app %>/styles/mainui.less',
-          '<%= config.app %>/styles/contentscript.css': '<%= config.app %>/styles/contentscript.less'
+        less: {
+          app: {
+            files: {
+              '<%= config.app %>/styles/mainui.css': '<%= config.app %>/styles/mainui.less',
+              '<%= config.app %>/styles/contentscript.css': '<%= config.app %>/styles/contentscript.less'
+            }
+          }
+        },
+        coffee:{
+          compile:{
+            files: [{
+              expand: true,
+              cwd: '<%= config.app %>/coffees/',
+              src: ['**/*.coffee'],
+              dest: '<%= config.app %>/scripts/',
+              ext: '.js'
+            }]
+          }
         }
-      }
-    }
   });
+
 
   grunt.registerTask('debug', function () {
     grunt.task.run([
@@ -341,6 +358,8 @@ module.exports = function (grunt) {
   grunt.registerTask('build', [
     'clean:dist',
     'chromeManifest:dist',
+    'coffee',
+    'less',
     'useminPrepare',
     'concurrent:dist',
     'cssmin',
