@@ -33,7 +33,7 @@ body{
     padding: 0;
     margin: 10px;
     color: #444;
-    padding-top: 68px;
+    padding-top: 125px;
     padding-bottom: 50px;
     background: @bg-color;
     font-size: 12px;
@@ -74,6 +74,7 @@ ol{
         font-size: 12px;
         line-height: 1;
         font-family: 'Sinkin Sans Regular';
+        border-bottom: 1px solid #666;
 
         #logo{
             position: absolute;
@@ -95,7 +96,9 @@ ol{
     }
 
     #header-bottom-panel{
-    	background: @red-color-1;
+        padding: 10px;
+    	background: @primary-color;
+        border-bottom: 1px solid #888;
     }
 
     .toolbar-panel{
@@ -109,21 +112,53 @@ ol{
     }
 }
 
+textarea{
+    border: 1px solid;
+
+    &:focus{
+        outline: none;
+    } 
+}
+
+#xpath-textarea{
+    width: 100%;
+    resize: none;
+    color: @grey-color-2;
+}
+
+.find-xpath{
+    margin: 10px 0;
+    color: @font-color;
+    display: inline-block;
+    cursor: pointer;    
+
+    &:hover{
+        color: @font-color;        
+    }
+}
+
 #instruction-text{
     position: absolute;
     left: 0;
     right: 0;
     padding: 10px;
     text-align: center;
-    top: 100px;
+    top: 160px;
     text-shadow: 0px 1px #fff;
     color: #aaa;
     font-size: 13px;
+    display: none;
 }
 
 #container{
     position: relative;
     z-index: 10;
+
+    &:empty{
+        + #instruction-text{
+            display: block;
+        }
+    }
 
     .page-object{
         margin-bottom: 10px;
@@ -324,5 +359,9 @@ input[type="text"]{
 
     &:hover{
         color: @primary-color;
+    }
+
+    &:active{
+        box-shadow: none;
     }
 }

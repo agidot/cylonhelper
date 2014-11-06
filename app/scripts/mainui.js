@@ -41,6 +41,7 @@ function addElement(pageIndex,element,isUpdateScroll){
   $(targetElement).focus(function(){
     var Xpath = element.Xpath;
     $(elementsDom).siblings('.xpath-text').text(Xpath);
+    $('#xpath-textarea').text(Xpath);
   });
 
   elementsDom.find('li').eq(elements.length-1).mouseenter(function(e){
@@ -121,8 +122,13 @@ function addPage(tabId,pageURL,pageTitle){
   html += '<input type="text" class="page-name-textbox" placeholder="Page Name" value ="' + page.name +'">';
   html += '<input type="text" class="page-url-textbox" placeholder="Page URL" data-url = "'+ pageURL +'" value ="' + pageURL +'">';
   html += '</div>';
-  html += '<h5 class ="find-xpath">Elements</h5>';
-  html += '<div class="xpath-text">';
+  html += '<div class="row">';
+  html += '<div class="col-sm-6 col-xs-6">';
+  html += '<h5>Elements</h5>';
+  html += '</div>';
+  html += '<div class="col-sm-6 col-xs-6 text-right">';
+  html += '<a href="#" class="find-xpath"><i class="fa fa-paint-brush"></i>&nbsp;&nbsp;Highlight  All in page</a>';
+  html += '</div>';
   html += '</div>';
   html += '<ul class="elements">';
   html += '</ul>';
