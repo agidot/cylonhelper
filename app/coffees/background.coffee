@@ -1,5 +1,7 @@
 'use strict'
 
+mainWindow = null
+
 setBadgeText = (text) ->
   chrome.browserAction.setBadgeText text: text
   return

@@ -2,6 +2,8 @@
   'use strict';
   var createMainWindow, mainWindow, sendMessageToTab, setBadgeText;
 
+  mainWindow = null;
+
   setBadgeText = function(text) {
     chrome.browserAction.setBadgeText({
       text: text
@@ -21,7 +23,6 @@
       width: 460,
       height: 600
     }, function(chromeWindow) {
-      var mainWindow;
       mainWindow = chromeWindow;
       setBadgeText('on');
       chrome.tabs.query({}, function(tabs) {
