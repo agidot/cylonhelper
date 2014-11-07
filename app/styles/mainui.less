@@ -113,7 +113,10 @@ ol{
 }
 
 textarea{
-    border: 1px solid;
+    border: 1px solid #ccc;
+    resize: none;
+    width: 100%;
+    padding: 5px;
 
     &:focus{
         outline: none;
@@ -123,7 +126,12 @@ textarea{
 #xpath-textarea{
     width: 100%;
     resize: none;
+    border: none;
     color: @grey-color-2;
+}
+
+.element-comment-textarea{
+    margin: 10px 0 0;
 }
 
 .find-xpath{
@@ -147,7 +155,7 @@ textarea{
     text-shadow: 0px 1px #fff;
     color: #aaa;
     font-size: 13px;
-    display: none;
+    opacity: 0;
 }
 
 #container{
@@ -156,7 +164,7 @@ textarea{
 
     &:empty{
         + #instruction-text{
-            display: block;
+            opacity: 1;
         }
     }
 
@@ -228,14 +236,16 @@ textarea{
                         .remove-element-button{
                             display: none;
                             position: absolute;
-                            right: 8px;
-                            top: 15px;
+                            right: 9px;
+                            top: 6px;
                         }
 
                         .show-detail-button{
+                            display: none;
                             position: absolute;
                             right: 9px;
-                            top: 25px;   
+                            top: 19px;   
+                            font-size: 14px;
                             color: @grey-color-1;
                         }
 
@@ -244,6 +254,7 @@ textarea{
                                 color: @grey-color-2;
                             }
 
+                            .show-detail-button,
                             .remove-element-button{
                                 display: block;
                             }
@@ -264,6 +275,10 @@ textarea{
                                 //border-color: @active-border;
                                 outline: 0;
                             }
+                        }
+
+                        .detail-panel{
+
                         }
                     }
                 }
@@ -286,15 +301,16 @@ textarea{
     right: 0;
     padding: 10px;
     border-top: 1px solid #aaa;
-    background: #fff;
+    background: rgba(255, 255, 255, 0.7);
     z-index: 100;
 }
 
+.show-detail-button,
 .remove-button{
     color: @grey-color-1;
 
     &:hover{
-        color: @grey-color-2;
+        color: @grey-color-2 !important;
     }
 }
 
@@ -313,6 +329,7 @@ input[type="text"]{
 .btn{
     font-size: 12px;
     border-radius: 2px;
+    cursor: pointer;
     
     &.red-color{
         background: @red-color-1;
@@ -333,7 +350,7 @@ input[type="text"]{
         input[type="file"]{
             position: absolute;
             top: 0;
-            left: 0;
+            right: 0;
             opacity: 0;
             cursor: pointer;
             font-size: 100px;

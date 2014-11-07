@@ -11,20 +11,27 @@
   };
 
   addElement = function(pageIndex, element, isUpdateScroll) {
-    var elements, elementsDom, html, page, pageURL, targetElement;
+    var detailPanelId, elements, elementsDom, html, page, pageURL, targetElement;
     page = pages[pageIndex];
     page.elements.push(element);
     console.log(page);
     console.log(pages);
     pageURL = page.url;
     elements = page.elements;
+    detailPanelId = 'detail-panel-' + pageIndex + '-' + elements.length;
     html = '';
     html += '<li>';
     html += '<span class=\"element-no\">' + elements.length + '</span>';
     html += '<a href=\"#\" class=\"remove-button remove-element-button\">';
     html += '<i class=\"fa fa-close\"></i>';
     html += '</a>';
+    html += '<a class=\"show-detail-button\" data-toggle="collapse" data-parent="" href="#' + detailPanelId + '">';
+    html += '<i class=\"fa fa-sort-down\"></i>';
+    html += '</a>';
     html += '<input type=\"text\" class=\"element-name-textbox\" placeholder=\"Element name\", value = \"' + element.name + '\">';
+    html += '<div id="' + detailPanelId + '" class="detail-panel panel-collapse collapse">';
+    html += '<textarea rows="3" class="element-comment-textarea" placeholder="Comment goes here"></textarea>';
+    html += '</div>';
     html += '</li>';
     elementsDom = $('.elements').eq(pageIndex);
     elementsDom.append(html);

@@ -75,7 +75,10 @@ ol {
   border-left: 1px solid #f00;
 }
 textarea {
-  border: 1px solid;
+  border: 1px solid #ccc;
+  resize: none;
+  width: 100%;
+  padding: 5px;
 }
 textarea:focus {
   outline: none;
@@ -83,7 +86,11 @@ textarea:focus {
 #xpath-textarea {
   width: 100%;
   resize: none;
+  border: none;
   color: #333333;
+}
+.element-comment-textarea {
+  margin: 10px 0 0;
 }
 .find-xpath {
   margin: 10px 0;
@@ -104,14 +111,14 @@ textarea:focus {
   text-shadow: 0px 1px #fff;
   color: #aaa;
   font-size: 13px;
-  display: none;
+  opacity: 0;
 }
 #container {
   position: relative;
   z-index: 10;
 }
 #container:empty + #instruction-text {
-  display: block;
+  opacity: 1;
 }
 #container .page-object {
   margin-bottom: 10px;
@@ -169,18 +176,21 @@ textarea:focus {
 #container .page-object .panel .panel-body .elements li .remove-element-button {
   display: none;
   position: absolute;
-  right: 8px;
-  top: 15px;
+  right: 9px;
+  top: 6px;
 }
 #container .page-object .panel .panel-body .elements li .show-detail-button {
+  display: none;
   position: absolute;
   right: 9px;
-  top: 25px;
+  top: 19px;
+  font-size: 14px;
   color: #aaaaaa;
 }
 #container .page-object .panel .panel-body .elements li:hover .element-no {
   color: #333333;
 }
+#container .page-object .panel .panel-body .elements li:hover .show-detail-button,
 #container .page-object .panel .panel-body .elements li:hover .remove-element-button {
   display: block;
 }
@@ -210,14 +220,16 @@ textarea:focus {
   right: 0;
   padding: 10px;
   border-top: 1px solid #aaa;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.7);
   z-index: 100;
 }
+.show-detail-button,
 .remove-button {
   color: #aaaaaa;
 }
+.show-detail-button:hover,
 .remove-button:hover {
-  color: #333333;
+  color: #333333 !important;
 }
 input[type="text"] {
   margin-bottom: 5px;
@@ -232,6 +244,7 @@ input[type="text"]:focus {
 .btn {
   font-size: 12px;
   border-radius: 2px;
+  cursor: pointer;
 }
 .btn.red-color {
   background: #cd0000;
@@ -250,7 +263,7 @@ input[type="text"]:focus {
 .btn.file input[type="file"] {
   position: absolute;
   top: 0;
-  left: 0;
+  right: 0;
   opacity: 0;
   cursor: pointer;
   font-size: 100px;

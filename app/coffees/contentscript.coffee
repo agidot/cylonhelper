@@ -109,7 +109,7 @@ changeStyleAtXpath = (Xpath) ->
   for i of elements
     if elements[i].Xpath is Xpath
       $('html, body').stop(true, true).animate
-        scrollTop: $(elements[i].element).offset().top
+        scrollTop: $(elements[i].element).offset().top - 100
       , 200
       addCylonHover elements[i].element
       return true

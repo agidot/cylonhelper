@@ -152,7 +152,7 @@
     for (i in elements) {
       if (elements[i].Xpath === Xpath) {
         $('html, body').stop(true, true).animate({
-          scrollTop: $(elements[i].element).offset().top
+          scrollTop: $(elements[i].element).offset().top - 100
         }, 200);
         addCylonHover(elements[i].element);
         return true;
