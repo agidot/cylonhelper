@@ -34,20 +34,20 @@ module.exports = function (grunt) {
       },
       js: {
         files: ['<%= config.app %>/scripts/{,*/}*.js'],
-tasks: ['jshint'],
-options: {
-  livereload: true
-}
+        tasks: ['jshint'],
+        options: {
+          livereload: true
+        }
       },
       gruntfile: {
         files: ['Gruntfile.js']
       },
       styles: {
         files: ['<%= config.app %>/styles/{,*/}*.css'],
-tasks: [],
-options: {
-  livereload: true
-}
+        tasks: [],
+        options: {
+          livereload: true
+        }
       },
       livereload: {
         options: {
@@ -63,17 +63,17 @@ options: {
       },
       less: {
         files: ['<%= config.app %>/styles/{,*/}*.less'],
-          tasks: ['less'],
-          options: {
-            livereload: true
-          }
+        tasks: ['less'],
+        options: {
+          livereload: true
+        }
       },
       coffee: {
         files: ['<%= config.app %>/coffees/{,*/}*.coffee'],
-          tasks: ['coffee'],
-          options: {
-            livereload: true
-          }
+        tasks: ['coffee'],
+        options: {
+          livereload: true
+        }
       }
     },
     // Grunt server and debug server setting
@@ -127,8 +127,8 @@ options: {
       all: [
         'Gruntfile.js',
         '<%= config.app %>/scripts/{,*/}*.js',
-            '!<%= config.app %>/scripts/vendor/*',
-            'test/spec/{,*/}*.js'
+        '!<%= config.app %>/scripts/vendor/*',
+        'test/spec/{,*/}*.js'
       ]
     },
     mocha: {
@@ -169,7 +169,7 @@ options: {
         assetsDirs: ['<%= config.dist %>', '<%= config.dist %>/images']
       },
       html: ['<%= config.dist %>/{,*/}*.html'],
-          css: ['<%= config.dist %>/styles/{,*/}*.css']
+      css: ['<%= config.dist %>/styles/{,*/}*.css']
     },
 
     // The following *-min tasks produce minifies files in the dist folder
@@ -242,104 +242,105 @@ options: {
           // },
 
           // Copies remaining files to places other tasks can use
-          copy: {
-          dist: {
-            files: [{
-              expand: true,
-              dot: true,
-              cwd: '<%= config.app %>',
-              dest: '<%= config.dist %>',
-              src: [
-                '*.{ico,png,txt}',
-                'images/{,*/}*.{webp,gif}',
-          '{,*/}*.html',
-          'styles/{,*/}*.css',
-          'styles/fonts/{,*/}*.*',
-          '_locales/{,*/}*.json'
-              ]
-            },{
-              expand: true,
-              dot: true,
-              cwd: '<%= config.app %>/bower_components/font-awesome',
-              src: ['fonts/{,*/}*.*'],
-          dest: '<%= config.dist %>'
-            },{
-              expand: true,
-              dot: true,
-              cwd: '<%= config.app %>/bower_components/bootstrap/dist',
-              src: ['fonts/{,*/}*.*'],
-          dest: '<%= config.dist %>'
-            }]
-          }
-        },
-
-        // Run some tasks in parallel to speed up build process
-        concurrent: {
-          chrome: [
-          ],
-          dist: [
-            'imagemin',
-            'svgmin'
-          ],
-          test: [
+    copy: {
+      dist: {
+        files: [{
+          expand: true,
+          dot: true,
+          cwd: '<%= config.app %>',
+          dest: '<%= config.dist %>',
+          src: [
+            '*.{ico,png,txt}',
+            'images/{,*/}*.{webp,gif}',
+            '{,*/}*.html',
+            'styles/{,*/}*.css',
+            'styles/fonts/{,*/}*.*',
+            '_locales/{,*/}*.json'
           ]
-        },
+        },{
+          expand: true,
+          dot: true,
+          cwd: '<%= config.app %>/bower_components/font-awesome',
+          src: ['fonts/{,*/}*.*'],
+          dest: '<%= config.dist %>'
+        },{
+          expand: true,
+          dot: true,
+          cwd: '<%= config.app %>/bower_components/bootstrap/dist',
+          src: ['fonts/{,*/}*.*'],
+          dest: '<%= config.dist %>'
+        }]
+      }
+    },
 
-        // Auto buildnumber, exclude debug files. smart builds that event pages
-        chromeManifest: {
-          dist: {
-            options: {
-              buildnumber: false,
-              background: {
-                target: 'scripts/background.js',
-                exclude: [
-                  'scripts/chromereload.js'
-                ]
-              }
-            },
-            src: '<%= config.app %>',
-            dest: '<%= config.dist %>'
-          }
-        },
+    // Run some tasks in parallel to speed up build process
+    concurrent: {
+      chrome: [
+      ],
+      dist: [
+        'imagemin',
+        'svgmin'
+      ],
+      test: [
+      ]
+    },
 
-        // Compress dist files to package
-        compress: {
-          dist: {
-            options: {
-              archive: function() {
-                var manifest = grunt.file.readJSON('app/manifest.json');
-                return 'package/cylonhelper-' + manifest.version + '.zip';
-              }
-            },
-            files: [{
-              expand: true,
-              cwd: 'dist/',
-              src: ['**'],
-              dest: ''
-            }]
+    // Auto buildnumber, exclude debug files. smart builds that event pages
+    chromeManifest: {
+      dist: {
+        options: {
+          buildnumber: false,
+          background: {
+            target: 'scripts/background.js',
+            exclude: [
+              'scripts/chromereload.js'
+            ]
           }
         },
-        less: {
-          app: {
-            files: {
-              '<%= config.app %>/styles/mainui.css': '<%= config.app %>/styles/mainui.less',
-              '<%= config.app %>/styles/contentscript.css': '<%= config.app %>/styles/contentscript.less'
-            }
+        src: '<%= config.app %>',
+        dest: '<%= config.dist %>'
+      }
+    },
+
+    // Compress dist files to package
+    compress: {
+      dist: {
+        options: {
+          archive: function() {
+            var manifest = grunt.file.readJSON('app/manifest.json');
+            return 'package/cylonhelper-' + manifest.version + '.zip';
           }
         },
-        coffee:{
-          compile:{
-            files: [{
-              expand: true,
-              cwd: '<%= config.app %>/coffees/',
-              src: ['**/*.coffee'],
-              dest: '<%= config.app %>/scripts/',
-              ext: '.js'
-            }]
-          }
+        files: [{
+          expand: true,
+          cwd: 'dist/',
+          src: ['**'],
+          dest: ''
+        }]
+      }
+    },
+
+    less: {
+      app: {
+        files: {
+          '<%= config.app %>/styles/mainui.css': '<%= config.app %>/styles/mainui.less',
+          '<%= config.app %>/styles/contentscript.css': '<%= config.app %>/styles/contentscript.less'
         }
-  });
+      }
+    },
 
+    coffee:{
+      compile:{
+        files: [{
+          expand: true,
+          cwd: '<%= config.app %>/coffees/',
+          src: ['**/*.coffee'],
+          dest: '<%= config.app %>/scripts/',
+          ext: '.js'
+        }]
+      }
+    }
+  });
 
   grunt.registerTask('debug', function () {
     grunt.task.run([
