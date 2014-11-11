@@ -14,6 +14,8 @@ addElement = (pageIndex, element, isUpdateScroll) ->
   console.log pages
   pageURL = page.url
   elements = page.elements
+  if element.comment is undefined
+    element.comment = ''
   detailPanelId = 'detail-panel-' + pageIndex + '-' + elements.length;
 
   html = ''
@@ -27,7 +29,7 @@ addElement = (pageIndex, element, isUpdateScroll) ->
   html += '</a>'
   html += '<input type=\"text\" class=\"element-name-textbox\" placeholder=\"Element name\", value = \"' + element.name + '\">'
   html += '<div id="' + detailPanelId + '" class="detail-panel panel-collapse collapse">'
-  html += '<textarea rows="3" class="element-comment-textarea" placeholder="Comment goes here"></textarea>'
+  html += '<textarea rows="3" class="element-comment-textarea" placeholder="Comment goes here">'+ element.comment + '</textarea>'
   html += '</div>'
   html += '</li>'
   elementsDom = $('.elements').eq(pageIndex)
@@ -242,6 +244,9 @@ constructYAML = ->
       element = {}
       element.name = (if (elementTextBox.val() is '') then elementTextBox.attr('placeholder') else elementTextBox.val())
       element.xpath = pages[i].elements[j].Xpath
+      comment = pageElement.find('.element-comment-textarea').eq(j).val()
+      if comment isnt ''
+        element.comment = comment
       yamlObject.elements.push element
       j++
     yamlDumped = jsyaml.safeDump(yamlObject)
@@ -286,6 +291,8 @@ onLoadYAML = (e) ->
       element = {}
       element.name = yamlObject[i - 1].elements[j].name
       element.Xpath = yamlObject[i - 1].elements[j].xpath
+      if yamlObject[i - 1].elements[j].comment
+        element.comment = yamlObject[i - 1].elements[j].comment
       addElement i - 1, element, false
       j++
     i++
