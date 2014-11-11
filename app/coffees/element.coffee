@@ -17,9 +17,10 @@ class window.Element
       sibling = element.previousSibling
 
       while sibling
-        
         # Ignore document type declaration.
-        continue  if sibling.nodeType is Node.DOCUMENT_TYPE_NODE
+        if sibling.nodeType is Node.DOCUMENT_TYPE_NODE
+          break
+
         ++index  if sibling.nodeName is element.nodeName
         sibling = sibling.previousSibling
       tagName = element.nodeName.toLowerCase()
