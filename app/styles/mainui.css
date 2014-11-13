@@ -10,7 +10,7 @@ body {
   padding: 0;
   margin: 10px;
   color: #444;
-  padding-top: 125px;
+  padding-top: 90px;
   padding-bottom: 50px;
   background: #eaeaea;
   font-size: 12px;
@@ -79,9 +79,14 @@ textarea {
   resize: none;
   width: 100%;
   padding: 5px;
+  box-sizing: border-box;
 }
 textarea:focus {
   outline: none;
+}
+#current-viewed-page {
+  margin: 5px 0;
+  min-height: 10px;
 }
 #xpath-textarea {
   width: 100%;
@@ -90,7 +95,12 @@ textarea:focus {
   color: #333333;
 }
 .element-comment-textarea {
-  margin: 10px 0 0;
+  margin: 4px 0 0;
+  box-sizing: border-box;
+  height: 63px;
+}
+.element-comment-textarea:focus {
+  border: 2px solid #5cbdc9;
 }
 .find-xpath {
   margin: 10px 0;
@@ -135,6 +145,7 @@ textarea:focus {
 }
 #container .page-object .panel .panel-body {
   border-color: #aaaaaa;
+  padding: 11px 15px 5px;
 }
 #container .page-object .panel .panel-body .page-name-textbox,
 #container .page-object .panel .panel-body .page-url-textbox {
@@ -144,7 +155,7 @@ textarea:focus {
 }
 #container .page-object .panel .panel-body .page-name-textbox:focus,
 #container .page-object .panel .panel-body .page-url-textbox:focus {
-  border-color: #444444;
+  border-color: #5cbdc9;
 }
 #container .page-object .panel .panel-body .elements {
   list-style: none;
@@ -152,7 +163,7 @@ textarea:focus {
   padding: 0;
 }
 #container .page-object .panel .panel-body .elements li {
-  padding: 7px 25px;
+  padding: 3px 25px;
   border: 1px solid #ccc;
   background: #f8f8f8;
   position: relative;
@@ -162,7 +173,7 @@ textarea:focus {
   border-top: none;
 }
 #container .page-object .panel .panel-body .elements li.active {
-  border-left-color: #444444;
+  border-left-color: #5cbdc9;
 }
 #container .page-object .panel .panel-body .elements li.active .element-no {
   color: #333333;
@@ -177,13 +188,13 @@ textarea:focus {
   display: none;
   position: absolute;
   right: 9px;
-  top: 6px;
+  top: 4px;
 }
 #container .page-object .panel .panel-body .elements li .show-detail-button {
   display: none;
   position: absolute;
   right: 9px;
-  top: 19px;
+  top: 15px;
   font-size: 14px;
   color: #aaaaaa;
 }
@@ -197,7 +208,7 @@ textarea:focus {
 #container .page-object .panel .panel-body .elements li .element-no {
   position: absolute;
   left: 9px;
-  top: 12px;
+  top: 9px;
   color: #aaaaaa;
   font-weight: bold;
 }
@@ -205,6 +216,7 @@ textarea:focus {
   margin: 0;
 }
 #container .page-object .panel .panel-body .elements li .element-name-textbox:focus {
+  border: 2px solid #5cbdc9;
   outline: 0;
 }
 .xpath-text {
@@ -237,6 +249,8 @@ input[type="text"] {
   border: 1px solid #ccc;
   padding: 5px;
   border-radius: 2px;
+  height: 29px;
+  box-sizing: border-box;
 }
 input[type="text"]:focus {
   outline: none;

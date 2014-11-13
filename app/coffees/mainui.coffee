@@ -40,6 +40,9 @@ addElement = (pageIndex, element, isUpdateScroll) ->
     Xpath = element.Xpath
     $(elementsDom).siblings('.xpath-text').text Xpath
     $('#xpath-textarea').text Xpath
+    viewedPage = pageIndex
+    viewedPage++;
+    $('#current-viewed-page').text 'Page #' + viewedPage
     return
 
   elementsDom.find('li').eq(elements.length - 1).mouseenter((e) ->
@@ -113,7 +116,7 @@ addPage = (tabId, pageURL, pageTitle) ->
   html += '<div class = \"panel-heading\">'
   html += '<h4 class = \"panel-title\">'
   html += '<a data-toggle = \"collapse\" data-parent = \"\" href = \"#page-content-panel-' + pageCount + '\">'
-  html += 'Page #' + pageCount
+  html += '#' + pageCount
   html += '</a>'
   html += '<a href=\"#\" class=\"pull-right\">'
   html += '<i class=\"fa fa-close remove-button remove-page-button\"></i>'
@@ -161,9 +164,9 @@ addPage = (tabId, pageURL, pageTitle) ->
         activatePage index
         page.tabId = wind.tabs[0].id
         tobeSent[wind.tabs[0].id] = Xpaths
-        return
+        return false
 
-    return
+    return false
 
   $('.page-object').eq(index).find('.remove-page-button').click (e) ->
     removeButton = $(this)

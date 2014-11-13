@@ -12,7 +12,7 @@
 @font-color: @grey-color-2;
 @bg-color: @grey-color-3;
 @border-color-1: @grey-color-1;
-@active-border: #444;
+@active-border: #5cbdc9;
 @primary-color: #202020;
 @found-color: #00b056;
 @not-found-color: @red-color-4;
@@ -33,7 +33,7 @@ body{
     padding: 0;
     margin: 10px;
     color: #444;
-    padding-top: 125px;
+    padding-top: 90px;
     padding-bottom: 50px;
     background: @bg-color;
     font-size: 12px;
@@ -117,10 +117,16 @@ textarea{
     resize: none;
     width: 100%;
     padding: 5px;
+    box-sizing: border-box;
 
     &:focus{
         outline: none;
     } 
+}
+
+#current-viewed-page{
+    margin: 5px 0;
+    min-height: 10px;
 }
 
 #xpath-textarea{
@@ -131,7 +137,13 @@ textarea{
 }
 
 .element-comment-textarea{
-    margin: 10px 0 0;
+    margin: 4px 0 0;
+    box-sizing: border-box;
+    height: 63px;
+
+    &:focus{
+        border: 2px solid @active-border;
+    }
 }
 
 .find-xpath{
@@ -189,6 +201,7 @@ textarea{
 
             .panel-body{
                 border-color: @border-color-1;
+                padding: 11px 15px 5px;
 
                 .page-name-textbox,
                 .page-url-textbox{
@@ -207,7 +220,7 @@ textarea{
                     padding: 0;
 
                     li{
-                        padding: 7px 25px;
+                        padding: 3px 25px;
                         border: 1px solid #ccc;
                         background: #f8f8f8;
                         position: relative;
@@ -237,14 +250,14 @@ textarea{
                             display: none;
                             position: absolute;
                             right: 9px;
-                            top: 6px;
+                            top: 4px;
                         }
 
                         .show-detail-button{
                             display: none;
                             position: absolute;
                             right: 9px;
-                            top: 19px;   
+                            top: 15px;   
                             font-size: 14px;
                             color: @grey-color-1;
                         }
@@ -263,7 +276,7 @@ textarea{
                         .element-no{
                             position: absolute;
                             left: 9px;
-                            top: 12px;
+                            top: 9px;
                             color: @grey-color-1;
                             font-weight: bold;
                         }
@@ -272,7 +285,7 @@ textarea{
                             margin: 0;
 
                             &:focus{
-                                //border-color: @active-border;
+                                border: 2px solid @active-border;
                                 outline: 0;
                             }
                         }
@@ -320,6 +333,8 @@ input[type="text"]{
     border: 1px solid #ccc;
     padding: 5px;
     border-radius: 2px;
+    height: 29px;
+    box-sizing: border-box;
 
 	&:focus{
 		outline: none;

@@ -1,17 +1,14 @@
-"use strict"
-console.log "'Allo 'Allo! Popup"
+'use strict'
+console.log 'Allo Allo! Popup'
 bg = chrome.extension.getBackgroundPage()
 $ ->
-  $("#mainButton").click (e) ->
+  $('#mainButton').click (e) ->
     console.log bg
     bg.createMainWindow()  if bg.mainWindow is null
     chrome.runtime.sendMessage
-      greeting: "hello"
+      greeting: 'hello'
     , (response) ->
       console.log response.farewell
       return
-
     return
-
   return
-

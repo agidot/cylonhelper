@@ -1,3 +1,5 @@
+'use strict'
+
 class window.Element
   constructor : (@element, Xpath) ->
     if Xpath
@@ -7,7 +9,7 @@ class window.Element
     @name = @getElementDefaultName(element)
 
   getElementDefaultName: (element) ->
-    $(element).text().replace(/^\s+|\s+$/g, "").substring 0, 50
+    $(element).text().replace(/^\s+|\s+$/g, '').substring 0, 50
 
   getElementTreeXPath: (element) ->
     paths = []
@@ -24,13 +26,13 @@ class window.Element
         ++index  if sibling.nodeName is element.nodeName
         sibling = sibling.previousSibling
       tagName = element.nodeName.toLowerCase()
-      pathIndex = ((if index then "[" + (index + 1) + "]" else ""))
+      pathIndex = ((if index then '[' + (index + 1) + ']' else ''))
       paths.splice 0, 0, tagName + pathIndex
       element = element.parentNode
-    (if paths.length then "/" + paths.join("/") else null)
+    (if paths.length then '/' + paths.join('/') else null)
   getElementXPath :(element) ->
     if element and element.id
-      "//*[@id=\"" + element.id + "\"]"
+      '//*[@id=\"' + element.id + '\"]'
     else
       @getElementTreeXPath element
 

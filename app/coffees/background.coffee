@@ -12,9 +12,9 @@ createMainWindow = ->
     type: 'detached_panel'
     focused: true
     top: 40
-    left: (screen.width - 480)
+    left: (screen.width - 460)
     width: 460
-    height: 600
+    height: screen.height
   , (chromeWindow) ->
     mainWindow = chromeWindow
     setBadgeText 'on'
