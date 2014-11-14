@@ -354,6 +354,9 @@ $ ->
 
   return
 
+$('#import-file-input').click ->
+  $(this).val('')
+
 $('#import-file-input').change ->
   return  if $(this).val() is ''
   readYAML this
