@@ -7,11 +7,16 @@ Page = (tabId, url, name) ->
   @url = url
   @active = false
   return
+
+pages = []
+pageCount = 0
+bg = chrome.extension.getBackgroundPage()
+tobeSent = {}
+headerHeight = 100
+
 addElement = (pageIndex, element, isUpdateScroll) ->
   page = pages[pageIndex]
   page.elements.push element
-  console.log page
-  console.log pages
   pageURL = page.url
   elements = page.elements
   if element.comment is undefined
@@ -229,7 +234,6 @@ processIncomingRespond = (respond, sendResponse) ->
 constructYAML = ->
   count = 0
   yaml = ''
-  console.log yaml
   for i of pages
     yamlObject = {}
     yamlObject.page = {}
@@ -260,16 +264,15 @@ constructYAML = ->
     type: 'text/plain;charset=utf-8'
   )
   saveAs blob, 'profile.yaml'
-  console.log yaml
   return
 clearPages = (callback, arg) ->
+  pages = []
+  pageCount = 0
+  tobeSent = {}
   chrome.tabs.query {}, (tabs) ->
     for i of tabs
       chrome.tabs.sendMessage tabs[i].id,
         msg: 'removeAllStyles'
-
-    pages = []
-    pageCount = 0
     $('#container').html ''
     callback arg  if callback
     return
@@ -282,6 +285,7 @@ onLoadYAML = (e) ->
   urls = []
   i = 1
 
+  console.log pages
   while i < result.length
     result[i] = '---' + result[i]
     yamlObject.push jsyaml.load(result[i])
@@ -299,7 +303,7 @@ onLoadYAML = (e) ->
       addElement i - 1, element, false
       j++
     i++
-  console.log yamlObject
+  console.log pages
   chrome.windows.create
     url: urls
   , (wind) ->
@@ -309,10 +313,8 @@ onLoadYAML = (e) ->
       Xpaths = []
       for elem of elements
         Xpaths.push elements[elem].Xpath
-      console.log Xpaths
       tobeSent[wind.tabs[tab].id] = Xpaths
     return
-
   return
 readYAML = (input) ->
   if input.files and input.files[0]
@@ -324,12 +326,6 @@ readYAML = (input) ->
     reader.readAsText input.files[0]
   return
 
-pages = []
-pageLength = 0
-pageCount = 0
-bg = chrome.extension.getBackgroundPage()
-tobeSent = {}
-headerHeight = 100
 chrome.tabs.onRemoved.addListener (tabId, removeInfo) ->
   for i of pages
     deactivatePage i  if pages[i].tabId is tabId  if pages[i].active
