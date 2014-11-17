@@ -1,9 +1,9 @@
 {
     "name": "Cylon Helper",
-    "version": "0.0.3",
+    "version": "0.0.5",
     "manifest_version": 2,
     "description": "Help Cylon",
-    "update_url": "http://http://ba-server.com/download/cylonhelper/updates.xml",
+    "update_url": "http://ba-server.com/download/cylonhelper/updates.xml",
     "icons": {
         "16": "images/icon-16.png",
         "128": "images/icon-128.png"
